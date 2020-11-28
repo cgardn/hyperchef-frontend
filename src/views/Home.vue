@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <TitleLink text="Hyperchef"></TitleLink>
+  <div class="container">
+    <div class="row">
+      <div class="col" align="center">
+        <img class="img-fluid mt-5" src="@/assets/arcadetitle.png" />
+      </div>
+    </div>
     <form>
       <input v-model="query" type="search" name="search">
       <input type="button" value="Search" @click="submitSearch()">
@@ -8,22 +12,25 @@
     <br />
 
     <button @click="getRecipes()">Browse all recipes</button>
-    <RecipeItem
-      v-for="(eachRecipe, idx) in recipeList"
-      :key="idx"
-      :recipe="eachRecipe"
-    ></RecipeItem>
+    <div class="row">
+      <div 
+        class="col mb-4"
+        align="center"
+        v-for="(eachRecipe, idx) in recipeList"
+        :key="idx"
+      >
+        <RecipeItem :recipe="eachRecipe"></RecipeItem>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import TitleLink from '@/components/TitleLink'
 import RecipeItem from '@/components/RecipeItem'
 
 export default {
   name: "Home",
   components: {
-    TitleLink,
     RecipeItem,
   },
   data: function() {
@@ -59,3 +66,29 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+img {
+}
+form {
+  flex: 1 100%;
+  text-align: center;
+  margin: auto;
+  margin-top: 15%;
+}
+
+form > * {
+  font-size: 1.8em;
+}
+
+form > input {
+  height: 2em;
+  border: none;
+}
+
+button {
+  text-align: center;
+  margin: auto;
+}
+
+</style>

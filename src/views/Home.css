@@ -1,49 +1,8 @@
-body {
-  background: linear-gradient(180deg, #020024 0%, #0a0a8b 8%, #00d4ff 100%) no-repeat fixed;
-  height: 100%;
-}
-
-.wrap {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.wrap > * {
-  padding: 10px;
-}
-
-form {
-  flex: 1 100%;
-  text-align: center;
-  margin: auto;
-  margin-top: 15%;
-}
-
-form > * {
-  font-size: 1.8em;
-}
-
-form > input {
-  height: 2em;
-  border: none;
-}
-
-button {
-  text-align: center;
-  margin: auto;
-}
-
 .resultViewer {
   display: flex;
   flex: 1 100%;
   flex-wrap: wrap;
   justify-content: space-evenly;
-}
-
-img {
-  margin: auto;
-  margin-top: 17%;
-  text-align: center;
 }
 
 @media (min-width: 300px) {
