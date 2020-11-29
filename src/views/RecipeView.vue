@@ -1,61 +1,59 @@
 <template>
-  <div>
-    <h2>{{recipe.name}}</h2>
-    <div>
-      <h4>Equipment you'll need</h4>
-      <p
-        v-for="(equip, idx) in recipe.equipment"
-        :key="idx"
-      >{{equip.name}}</p>
-    </div>
-    <div>
-      <h4>Ingredients</h4>
-      <table>
-      <tr
-        v-for="(ingredient, idx) in recipe.ingredients"
-        :key="idx"
-      >
-        <td>{{ingredient.name}}</td>
-        <td v-if="isMetric">{{ingredient.units.metric_show[0]}} {{ingredient.units.metric_show[1]}}</td>
-        <td v-else>{{ingredient.units.imperial_show[0]}} {{ingredient.units.imperial_show[1]}}</td>
-      </tr>
-            
-      </table>
+  <div class="container">
+    <h2 class="text-light mx-auto my-5" align="center">{{recipe.name}}</h2>
+    <div class="row d-flex justify-content-center">
+      <div class="col-12 col-md mx-auto">
+        <div class="card bg-grey">
+          <h4>Equipment you'll need</h4>
+          <div class="row">
+            <div
+              class="col-6"
+              v-for="(equip, idx) in recipe.equipment"
+              :key="idx"
+            >
+              <EquipmentLink :equipment="equip"></EquipmentLink>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md mx-auto">
+        <IngredientList :ingredients="recipe.ingredients"></IngredientList>
+      </div>
     </div>
 
-    <button @click="switchUnits()">
-      <span v-if="isMetric">Switch to Imperial units</span>
-      <span v-else>Switch to Metric units</span>
-    </button>
 
-    <div>
-      <h4>Steps:</h4>
-      <p
+    <div class="bg-light my-5 py-3">
+      <div class="col-12">
+        <h4>Steps:</h4>
+      </div>
+      <div class="col-12"
         v-for="(step, idx) in recipe.actions"
         :key="idx"
       >
         <b>{{step[0]}}</b>
         <br />
         <span>{{step[1]}}</span>
-      </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-module.exports = {
+import EquipmentLink from '@/components/EquipmentLink'
+import IngredientList from '@/components/IngredientList'
+
+export default {
   name: "RecipeView",
-  data: function() {
-    return {
-      isMetric: true,
-      recipe: {},
-    }
+  components: {
+    EquipmentLink,
+    IngredientList,
   },
   props: [ "recipeSlug" ],
-  methods: {
-    switchUnits: function() {
-      this.isMetric = !this.isMetric;
-    },
+  data: function() {
+    return {
+      recipe: {},
+    }
   },
   mounted: async function() {
     this.$axios({
