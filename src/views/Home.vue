@@ -1,17 +1,35 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col" align="center">
+      <div class="col-12" align="center">
         <img class="img-fluid mt-5" src="@/assets/arcadetitle.png" />
       </div>
+      <div class="col-12">
+        <form>
+          <input v-model="query" type="search" name="search">
+          <input type="button" value="Search" @click="submitSearch()">
+        </form>
+      </div>
     </div>
-    <form>
-      <input v-model="query" type="search" name="search">
-      <input type="button" value="Search" @click="submitSearch()">
-    </form>
-    <br />
+    <div class="row d-flex justify-space-evenly">
+      <div class="col-6" align="right">
+        <button @click="getRecipes()">Browse all recipes</button>
+      </div>
+      <div class="col-6">
+        <button @click="toggleFilters()">Filters</button>
+      </div>
+    </div>
+    <div class="row" v-if="isFilterPanelVisible">
+      <div class="col bg-light">
+        <ToggleButton
+          v-for="(f, idx) in filterList"
+          :key="idx"
+          :active="f.state"
+          @click="toggleFilter(f.name)"
+          >{{f.name}}</ToggleButton>
+      </div>
+    </div>
 
-    <button @click="getRecipes()">Browse all recipes</button>
     <div class="row">
       <div 
         class="col mb-4"
@@ -27,19 +45,34 @@
 
 <script>
 import RecipeItem from '@/components/RecipeItem'
+import ToggleButton from '@/components/ToggleButton'
 
 export default {
   name: "Home",
   components: {
     RecipeItem,
+    ToggleButton,
   },
   data: function() {
     return {
+      filterList: [
+        {name: 'Root', state: false},
+        {name: 'Poultry', state: false},
+        {name: 'Herb', state: false},
+      ],
       recipeList: [],
       query: "",
+      isFilterPanelVisible: false,
     }
   },
   methods: {
+    toggleFilter: function(fName) {
+      let idx = this.filterList.findIndex(i => {return i.name === fName});
+      this.filterList[idx].state = !this.filterList[idx].state;
+    },
+    toggleFilters: function() {
+      this.isFilterPanelVisible = !this.isFilterPanelVisible;
+    },
     submitSearch: async function() {
       await this.$axios({
         method: 'GET',
