@@ -1,17 +1,31 @@
 <template>
   <div class="container">
+
+    <!-- hero image -->
     <div class="row">
       <div class="col-12" align="center">
         <img class="img-fluid mt-5" src="@/assets/arcadetitle.png" />
       </div>
+    </div>
+
+    <!-- search bar -->
+    <div class="row">
       <div class="col-12">
         <form>
-          <input v-model="query" type="search" name="search">
-          <input type="button" value="Search" @click="submitSearch()">
+          <div class="row" align="center">
+            <div class="col col-md-4 ml-auto mr-0 pr-1" align="right">
+              <input v-model="query" class="form-control rounded-0" type="search" name="search">
+            </div>
+            <div class="col-4 col-md-2 mr-auto ml-0 pl-1">
+              <input type="button" class="form-control rounded-0" value="Search" @click="submitSearch()">
+            </div>
+          </div>
         </form>
       </div>
     </div>
-    <div class="row d-flex justify-space-evenly">
+
+    <!-- load recipes + filter buttons -->
+    <div class="row my-3 d-flex justify-space-evenly">
       <div class="col-6" align="right">
         <button @click="getRecipes()">
           <span v-if="staleRecipes">
@@ -20,29 +34,32 @@
           <span v-else>
             Refresh Recipe List
           </span>
-
         </button>
       </div>
+
       <div class="col-6">
         <button @click="toggleFilters()">Filters</button>
       </div>
     </div>
+
+    <!-- filter panel -->
     <div class="row" v-if="isFilterPanelVisible">
       <FilterPanel
-        :filterList="filterList"
+        :filterList="all_filters"
         @toggleBtn="toggleFilter"
         ></FilterPanel>
     </div>
 
+    <!-- recipe list -->
     <div class="row">
-      <div class="col" v-if="loadingRecipesSpinner">
-        Loading...
+      <div class="col-2 mt-5 mx-auto text-light" align="center" v-if="loadingRecipesSpinner">
+        <h2>Loading...</h2>
       </div>
       <div 
         v-else
         class="col mb-4"
         align="center"
-        v-for="(eachRecipe, idx) in recipeList"
+        v-for="(eachRecipe, idx) in visibleRecipes"
         :key="idx"
       >
         <RecipeItem :recipe="eachRecipe"></RecipeItem>
@@ -63,8 +80,11 @@ export default {
   },
   data: function() {
     return {
-      filterList: [],
-      recipeList: [],
+      all_filters: {},
+      all_recipes: {},
+      sorted_recipes: {},
+      selectedFilters: [],
+      visibleRecipes: [],
       query: "",
       isFilterPanelVisible: false,
       loadingRecipesSpinner: false,
@@ -76,14 +96,40 @@ export default {
     },
   },
   methods: {
+    getSelectedFilters: function() {
+      this.selectedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === true);
+    },
+    getVisibleRecipes: function() {
+      // start with all recipe ids
+      let out = Object.keys(this.all_recipes).map(i => Number(i));
+
+      // for each selected filter, perform a series of intersections to get
+      //   to the final set of selected recipes
+      this.selectedFilters.forEach(tag => {
+        out = this.intersectArrays(out, this.sorted_recipes[tag])
+      })
+      this.visibleRecipes = out.map(id => this.all_recipes[id])
+    },
+    unionArrays: function(arr1, arr2) {
+      // returns the union of the two arrays
+      return [...new Set([...arr1, ...arr2])]
+    },
+    intersectArrays: function(arr1, arr2) {
+      // intersection of two arrays
+      return arr1.filter(x => arr2.includes(x))
+    },
     toggleFilter: function(fName) {
-      let idx = this.filterList.findIndex(i => {return i.name === fName});
-      this.filterList[idx].state = !this.filterList[idx].state;
+      this.all_filters[fName].state = !this.all_filters[fName].state;
+      this.getSelectedFilters();
+      this.getVisibleRecipes();
     },
     toggleFilters: function() {
       this.isFilterPanelVisible = !this.isFilterPanelVisible;
     },
     submitSearch: async function() {
+      return
+      /*
+      change to searching on client
       await this.$axios({
         method: 'GET',
         url: `http://192.168.1.203:3000/api/search`,
@@ -95,6 +141,7 @@ export default {
           this.recipeList = res.data;
         }
       });
+      */
     },
     getRecipes: async function() {
       this.loadingRecipesSpinner = true;
@@ -103,22 +150,26 @@ export default {
         url: `http://192.168.1.203:3000/api/all`,
       }).then( res => {
         if (res.status == 200) {
-          this.recipeList = res.data;
-          localStorage.setItem('recipeList', JSON.stringify(this.recipeList));
+          localStorage.setItem('recipeGraph', JSON.stringify(res.data));
+          this.parseData();
         }
       });
       this.loadingRecipesSpinner = false;
     },
+    parseData: function() {
+      let data = JSON.parse(localStorage.getItem("recipeGraph"));
+      this.all_recipes = data.all_recipes;
+      this.all_filters = data.all_filters;
+      this.sorted_recipes = data.sorted_recipe_ids;
+    },
   },
   mounted: async function() {
-    if (localStorage.getItem("recipeList")) {
-      this.recipeList = JSON.parse(localStorage.getItem("filterList"));
-    }
-    if (localStorage.getItem("filterList")) {
-      this.filterList = JSON.parse(localStorage.getItem("filterList"));
+    if (localStorage.getItem("recipeGraph")) {
+      this.parseData();
       return
     }
 
+    /*
     await this.$axios({
       method: 'GET',
       url: `http://192.168.1.203:3000/api/get_tags`,
@@ -133,6 +184,7 @@ export default {
       }
       localStorage.setItem('filterList', JSON.stringify(this.filterList));
     });
+    */
   },
 }
 </script>

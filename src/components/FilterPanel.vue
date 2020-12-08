@@ -4,20 +4,29 @@
       <div class="col-md-6">
         <h4>Meals</h4>
         <ToggleButton
-          v-for="(filter, idx) in recipeFilters"
+          v-for="(filter, idx) in Object.keys(recipeTypes)"
           :key="idx"
-          :active="filter.state"
-          @click="emitToggle(filter.name)"
-          >{{filter.name}}</ToggleButton>
+          :active="recipeTypes[filter].state"
+          @click="emitToggle(filter)"
+          >{{filter}}</ToggleButton>
       </div>
       <div class="col-md-6">
+        <h4>Ingredient Tags</h4>
+        <ToggleButton
+          v-for="(filter, idx) in Object.keys(ingredientTags)"
+          :key="idx"
+          :active="ingredientTags[filter].state"
+          @click="emitToggle(filter)"
+          >{{filter}}</ToggleButton>
+      </div>
+      <div class="col">
         <h4>Ingredients</h4>
         <ToggleButton
-          v-for="(filter, idx) in ingredientFilters"
+          v-for="(filter, idx) in Object.keys(ingredients)"
           :key="idx"
-          :active="filter.state"
-          @click="emitToggle(filter.name)"
-          >{{filter.name}}</ToggleButton>
+          :active="ingredients[filter].state"
+          @click="emitToggle(filter)"
+          >{{filter}}</ToggleButton>
       </div>
     </div>
   </div>
@@ -33,11 +42,20 @@ export default {
   },
   props: ["filterList"],
   computed: {
-    recipeFilters: function() {
-      return this.filterList.filter(i => i.type === 'recipe');
+    recipeTypes: function() {
+      return Object.fromEntries(Object.entries(this.filterList).filter(
+        i => i[1].type == "recipeType")
+      )
     },
-    ingredientFilters: function() {
-      return this.filterList.filter(i => i.type === 'ingredient');
+    ingredientTags: function() {
+      return Object.fromEntries(Object.entries(this.filterList).filter(
+        i => i[1].type == "ingredientTag")
+      )
+    },
+    ingredients: function() {
+      return Object.fromEntries(Object.entries(this.filterList).filter(
+        i => i[1].type == "ingredient")
+      )
     },
   },
   methods: {
