@@ -19,12 +19,12 @@
           @click="prevPage"
           :disabled="this.pageEnd/this.resultsPerPage <= 1"
           >Previous</button>
-        <span>Page {{this.pageEnd/this.resultsPerPage}} of {{this.pageCount}}</span>
+        <span>Page {{this.currentPage}} of {{this.pageCount}}</span>
         <button
           type="button"
           class="btn btn-light ml-2"
           @click="nextPage"
-          :disabled="this.pageEnd/this.resultsPerPage >= 20"
+          :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
           >Next</button>
       </div>
     </div>
@@ -60,12 +60,19 @@ export default {
     visibleRecipes: function() {
       return this.recipeBatch.slice(this.pageStart, this.pageEnd);
     },
+    currentPage: function() {
+      return Math.floor(this.pageEnd/this.resultsPerPage)
+
+    },
     pageEnd: function() {
       return this.pageStart + Number(this.resultsPerPage);
     },
     pageCount: function() {
       let total = this.recipeBatch.length;
-      return ( total - (total % this.resultsPerPage)) / this.resultsPerPage
+      // 1. subtract remainder and divide by per-page count for # of whole pages
+      // 2. (Math.ceil op) add 1 page if remainder is larger than 0, to catch the 
+      //    leftovers
+      return (( total - (total % this.resultsPerPage)) / this.resultsPerPage) + Math.ceil((total % this.resultsPerPage / (this.resultsPerPage + 1)))
     },
   },
   watch: {
