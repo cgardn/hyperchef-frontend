@@ -29,6 +29,11 @@
           >{{filter}}</ToggleButton>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <button @click="emitClearFilters">Reset Filters</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,6 +64,9 @@ export default {
     },
   },
   methods: {
+    emitClearFilters: function() {
+      this.$emit('clearBtn');
+    },
     emitToggle: function(name) {
       this.$emit('toggleBtn', name);
     },

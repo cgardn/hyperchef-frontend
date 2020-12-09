@@ -38,8 +38,9 @@
       </div>
 
       <div class="col-6">
-        <button @click="toggleFilters()">Filters</button>
+        <button @click="toggleFilterPanel()">Filters</button>
       </div>
+
     </div>
 
     <!-- filter panel -->
@@ -47,6 +48,7 @@
       <FilterPanel
         :filterList="all_filters"
         @toggleBtn="toggleFilter"
+        @clearBtn="clearSelectedFilters"
         ></FilterPanel>
     </div>
 
@@ -55,6 +57,10 @@
       <div class="col-2 mt-5 mx-auto text-light" align="center" v-if="loadingRecipesSpinner">
         <h2>Loading...</h2>
       </div>
+      <PaginatedResults
+        v-else
+        :recipeBatch="visibleRecipes"></PaginatedResults>
+        <!--
       <div 
         v-else
         class="col mb-4"
@@ -64,18 +70,21 @@
       >
         <RecipeItem :recipe="eachRecipe"></RecipeItem>
       </div>
+        -->
     </div>
   </div>
 </template>
 
 <script>
-import RecipeItem from '@/components/RecipeItem'
+//import RecipeItem from '@/components/RecipeItem'
+import PaginatedResults from '@/components/PaginatedResults'
 import FilterPanel from '@/components/FilterPanel'
 
 export default {
   name: "Home",
   components: {
-    RecipeItem,
+    //RecipeItem,
+    PaginatedResults,
     FilterPanel,
   },
   data: function() {
@@ -92,12 +101,19 @@ export default {
   },
   computed: {
     staleRecipes: function() {
-      return localStorage.getItem('recipeList') == null;
+      return localStorage.getItem('all_recipes') == null;
     },
   },
   methods: {
     getSelectedFilters: function() {
       this.selectedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === true);
+    },
+    clearSelectedFilters: function() {
+      this.selectedFilters.forEach(tag => {
+        this.all_filters[tag].state = false;
+      });
+      this.selectedFilters = [];
+      this.parseData();
     },
     getVisibleRecipes: function() {
       // start with all recipe ids
@@ -123,10 +139,11 @@ export default {
       this.getSelectedFilters();
       this.getVisibleRecipes();
     },
-    toggleFilters: function() {
+    toggleFilterPanel: function() {
       this.isFilterPanelVisible = !this.isFilterPanelVisible;
     },
     submitSearch: async function() {
+      // are we doing search right on frontend?
       return
       /*
       change to searching on client
@@ -161,6 +178,7 @@ export default {
       this.all_recipes = data.all_recipes;
       this.all_filters = data.all_filters;
       this.sorted_recipes = data.sorted_recipe_ids;
+      this.visibleRecipes = Object.keys(this.all_recipes).map(id => this.all_recipes[id]);
     },
   },
   mounted: async function() {
