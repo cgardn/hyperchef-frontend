@@ -58,7 +58,7 @@ export default {
   mounted: async function() {
     this.$axios({
       method: 'GET',
-      url: `${process.env.VUE_APP_BACKEND_URL}/api/${this.recipeSlug}`,
+      url: `${this.$backend}/api/${this.$apiVersion}/recipes/${this.recipeSlug}`,
     }).then( res => {
       if (res.status == 200) {
         this.recipe = res.data;
