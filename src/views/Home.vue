@@ -149,7 +149,7 @@ export default {
       change to searching on client
       await this.$axios({
         method: 'GET',
-        url: `http://192.168.1.203:3000/api/search`,
+        url: `${process.env.VUE_APP_BACKEND_URL}/api/search`,
         params: {
           query: this.query,
         },
@@ -164,7 +164,7 @@ export default {
       this.loadingRecipesSpinner = true;
       await this.$axios({
         method: 'GET',
-        url: `http://192.168.1.203:3000/api/all`,
+        url: `${process.env.VUE_APP_BACKEND_URL}/api/all`,
       }).then( res => {
         if (res.status == 200) {
           localStorage.setItem('recipeGraph', JSON.stringify(res.data));
@@ -190,7 +190,7 @@ export default {
     /*
     await this.$axios({
       method: 'GET',
-      url: `http://192.168.1.203:3000/api/get_tags`,
+      url: `${process.env.VUE_APP_BACKEND_URL}/api/get_tags`,
     }).then( res => {
       if (res.status == 200) {
         this.filterList = res.data['Recipe Tags'].map( (filter) => {
