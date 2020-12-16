@@ -8,37 +8,21 @@
       </div>
     </div>
 
-    <!-- search bar -->
-    <div class="row">
-      <div class="col-12">
-        <form>
-          <div class="row" align="center">
-            <div class="col col-md-4 ml-auto mr-0 pr-1" align="right">
-              <input v-model="query" class="form-control rounded-0" type="search" name="search">
-            </div>
-            <div class="col-4 col-md-2 mr-auto ml-0 pl-1">
-              <input type="button" class="form-control rounded-0" value="Search" @click="submitSearch()">
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <!-- load recipes + filter buttons -->
-    <div class="row my-3 d-flex justify-space-evenly">
-      <div class="col-6" align="right">
-        <button @click="getRecipes()">
-          <span v-if="staleRecipes">
-            Load Recipes
+    <div class="row my-3 d-flex justify-space-evenly" align="center">
+
+      <div class="col" align="right">
+        <button @click="toggleFilterPanel()">
+          <span v-if="isFilterPanelVisible">
+            Hide Filters
           </span>
           <span v-else>
-            Refresh Recipe List
+            Show Filters
           </span>
         </button>
       </div>
-
-      <div class="col-6">
-        <button @click="toggleFilterPanel()">Filters</button>
+      <div class="col" align="left">
+        <button @click="clearSelectedFilters">Clear Filters</button>
       </div>
 
     </div>
@@ -51,6 +35,19 @@
         @clearBtn="clearSelectedFilters"
         ></FilterPanel>
     </div>
+    
+    <div class="row" align="center" v-if="isFilterPanelVisible">
+      <div class="col" align="right">
+        <button @click="toggleFilterPanel()">
+          <span v-if="isFilterPanelVisible">
+            Hide Filters
+          </span>
+        </button>
+      </div>
+      <div class="col" align="left">
+        <button @click="clearSelectedFilters">Clear Filters</button>
+      </div>
+    </div>
 
     <!-- recipe list -->
     <div class="row">
@@ -59,31 +56,19 @@
       </div>
       <PaginatedResults
         v-else
-        :recipeBatch="visibleRecipes"></PaginatedResults>
-        <!--
-      <div 
-        v-else
-        class="col mb-4"
-        align="center"
-        v-for="(eachRecipe, idx) in visibleRecipes"
-        :key="idx"
-      >
-        <RecipeItem :recipe="eachRecipe"></RecipeItem>
-      </div>
-        -->
+        :recipeBatch="visibleRecipes"
+      ></PaginatedResults>
     </div>
   </div>
 </template>
 
 <script>
-//import RecipeItem from '@/components/RecipeItem'
 import PaginatedResults from '@/components/PaginatedResults'
 import FilterPanel from '@/components/FilterPanel'
 
 export default {
   name: "Home",
   components: {
-    //RecipeItem,
     PaginatedResults,
     FilterPanel,
   },
@@ -142,24 +127,6 @@ export default {
     toggleFilterPanel: function() {
       this.isFilterPanelVisible = !this.isFilterPanelVisible;
     },
-    submitSearch: async function() {
-      // are we doing search right on frontend?
-      return
-      /*
-      change to searching on client
-      await this.$axios({
-        method: 'GET',
-        url: `${this.$backend}/api/{this.$apiVersion}/search`,
-        params: {
-          query: this.query,
-        },
-      }).then( res => {
-        if (res.status == 200) {
-          this.recipeList = res.data;
-        }
-      });
-      */
-    },
     getRecipes: async function() {
       this.loadingRecipesSpinner = true;
       await this.$axios({
@@ -182,27 +149,7 @@ export default {
     },
   },
   mounted: async function() {
-    if (localStorage.getItem("recipeGraph")) {
-      this.parseData();
-      return
-    }
-
-    /*
-    await this.$axios({
-      method: 'GET',
-      url: `${this.$backend}/api/${this.$apiVersion}/get_tags`,
-    }).then( res => {
-      if (res.status == 200) {
-        this.filterList = res.data['Recipe Tags'].map( (filter) => {
-          return {name: filter, state: false, type: 'recipe'}
-        });
-        this.filterList = this.filterList.concat(res.data['Ingredient Tags'].map( filter => {
-          return {name: filter, state: false, type: 'ingredient'}
-        }));
-      }
-      localStorage.setItem('filterList', JSON.stringify(this.filterList));
-    });
-    */
+    this.getRecipes();
   },
 }
 </script>
