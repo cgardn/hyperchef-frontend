@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <a :href="equipment.affiliate_link" target='_blank'>{{equipment.name}}</a>
+    <a v-if="equipment.affiliate_link" :href="equipment.affiliate_link" target='_blank'>{{equipment.name}}</a>
+    <span v-else>
+      {{equipment.name}}
+    </span>
   </div>
 </template>
 
