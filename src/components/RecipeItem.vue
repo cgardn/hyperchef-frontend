@@ -1,13 +1,13 @@
 <template>
   <div class="card hoverPointer" style="width: 330px" @click="getSingleRecipe()">
     <div class="card-title card-text-color text-center mb-4">
-      {{recipe.name}}
+      <h4>{{recipe.name}}</h4>
     </div>
-    <div class="row align-items-start px-2">
-      <div class="col-4 card-text justify-content-start mb-2 pr-0">
+    <div class="row px-2 mb-2" align=left>
+      <div class="col-4 card-text justify-content-start my-auto pr-0">
         Skill:
       </div>
-      <div class="col-8 card-text justify-content-end mb-2">
+      <div class="col-8 card-text justify-content-end my-auto">
         <div class="progress">
           <div 
              class="progress-bar"
@@ -19,12 +19,12 @@
       </div>
     </div>
 
-    <div class="row align-items-start px-2">
-      <div class="col-4 card-text justify-content-start mb-2 pr-0">
+    <div class="row align-items-start px-2 mb-2" align=left>
+      <div class="col-4 card-text justify-content-start my-auto pr-0">
         Ingredients: 
       </div>
-      <div class="col-8 card-text justify-content-end mb-2">
-        <div class="progress">
+      <div class="col-8 card-text justify-content-end my-auto">
+        <div class="progress my-auto">
           <div 
              class="progress-bar"
              :class="[ingredientsColor]"
@@ -36,18 +36,11 @@
     </div>
 
     <div class="row align-items-start px-2">
-      <div class="col-4 card-text justify-content-start mb-2 pr-0">
-        Time:
+      <div class="col-6 card-text justify-content-start mb-2 pr-0">
+        Prep: {{this.prepTime}} minutes
       </div>
-      <div class="col-8 card-text justify-content-end mb-2">
-        <div class="progress">
-          <div 
-             class="progress-bar"
-             :class="[timeColor]"
-             role="progressbar"
-             :style="{ width: time }"
-             ></div>
-        </div>
+      <div class="col-6 card-text justify-content-start mb-2 pr-0" align=left>
+        Cook: {{this.cookTime}} minutes
       </div>
     </div>
 
@@ -77,11 +70,11 @@ export default {
     ingredientsColor: function() {
       return `bg-${this.barColors[Math.floor(this.recipe.ingredient_score/10)]}`;
     },
-    time: function() {
-      return `${this.recipe.time_score}%`;
+    prepTime: function() {
+      return this.recipe.prep_time;
     },
-    timeColor: function() {
-      return `bg-${this.barColors[Math.floor(this.recipe.time_score/10)]}`;
+    cookTime: function() {
+      return this.recipe.cook_time;
     },
   },
   props: ["recipe"],

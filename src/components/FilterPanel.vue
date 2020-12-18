@@ -23,17 +23,6 @@
           @click="emitToggle(filter)"
           >{{filter}}</ToggleButton>
       </div>
-      <!--
-      <div class="col">
-        <h4>Ingredients</h4>
-        <ToggleButton
-          v-for="(filter, idx) in Object.keys(ingredients)"
-          :key="idx"
-          :active="ingredients[filter].state"
-          @click="emitToggle(filter)"
-          >{{filter}}</ToggleButton>
-      </div>
-      -->
     </div>
   </div>
 </template>
