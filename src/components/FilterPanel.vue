@@ -87,3 +87,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+h4 {
+  text-transform: capitalize;
+}
+</style>
