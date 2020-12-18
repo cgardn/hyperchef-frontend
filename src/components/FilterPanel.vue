@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row bg-light pt-1 pb-3 my-3">
       <div class="col-md-6 mb-3">
-        <h4>Meals</h4>
+        <SelectiveToggle class="mb-1" name="Meals"></SelectiveToggle>
         <ToggleButton
           v-for="(filter, idx) in Object.keys(recipeTypes)"
           :key="idx"
@@ -15,7 +15,7 @@
         v-for="(itag, idx) in Object.keys(itags)"
         :key="idx"
       >
-      <h4>{{itag}}</h4>
+      <SelectiveToggle class="mb-1" :name="itag"></SelectiveToggle>
         <ToggleButton
           v-for="(filter, idy) in itags[itag]"
           :key="idy"
@@ -23,23 +23,13 @@
           @click="emitToggle(filter)"
           >{{filter}}</ToggleButton>
       </div>
-      <!--
-      <div class="col">
-        <h4>Ingredients</h4>
-        <ToggleButton
-          v-for="(filter, idx) in Object.keys(ingredients)"
-          :key="idx"
-          :active="ingredients[filter].state"
-          @click="emitToggle(filter)"
-          >{{filter}}</ToggleButton>
-      </div>
-      -->
     </div>
   </div>
 </template>
 
 <script>
-import ToggleButton from '@/components/ToggleButton'
+import ToggleButton from '@/components/ToggleButton';
+import SelectiveToggle from '@/components/SelectiveToggle';
 
 export default {
   name: "FilterPanel",
@@ -51,6 +41,7 @@ export default {
   },
   components: {
     ToggleButton,
+    SelectiveToggle,
   },
   props: ["filterList"],
   computed: {
