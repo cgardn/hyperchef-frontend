@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row mb-4">
-      <div class="col-5 offset-1 col-md-2 offset-md-4">
+      <div class="col-5 offset-1 col-md-2">
         <div class="row d-flex flex-column">
           <div class="col">
             <span class="text-light">Results per page:</span>
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="row mb-3 mt-auto text-light">
-      <div class="col">
+      <div class="col offset-1">
         {{this.recipeBatch.length}} of {{this.recipeCount}} recipes selected
       </div>
     </div>
