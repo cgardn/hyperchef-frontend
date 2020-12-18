@@ -57,6 +57,7 @@
       <PaginatedResults
         v-else
         :recipeBatch="visibleRecipes"
+        :recipeCount="Object.keys(all_recipes).length"
       ></PaginatedResults>
     </div>
   </div>

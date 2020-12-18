@@ -1,16 +1,22 @@
 <template>
   <div class="container">
     <div class="row mb-4">
-      <div class="col-2">
-        <span class="text-light">Results per page:</span>
-        <select 
-          v-model="resultsPerPage" 
-          class="form-control">
-          <option>10</option>
-          <option>25</option>
-          <option>50</option>
-          <option>100</option>
-        </select>
+      <div class="col-5 offset-1 col-md-2 offset-md-4">
+        <div class="row d-flex flex-column">
+          <div class="col">
+            <span class="text-light">Results per page:</span>
+          </div>
+          <div class="col-7 col-md">
+            <select 
+              v-model="resultsPerPage" 
+              class="form-control">
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div class="col mt-auto text-light">
         <button
@@ -18,14 +24,19 @@
           class="btn btn-light mr-2"
           @click="prevPage"
           :disabled="this.pageEnd/this.resultsPerPage <= 1"
-          >Previous</button>
-        <span>Page {{this.currentPage}} of {{this.pageCount}}</span>
+          >&#8592;</button>
+        <span>{{this.currentPage}} of {{this.pageCount}}</span>
         <button
           type="button"
           class="btn btn-light ml-2"
           @click="nextPage"
           :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
-          >Next</button>
+          >&#8594;</button>
+      </div>
+    </div>
+    <div class="row mb-3 mt-auto text-light">
+      <div class="col">
+        {{this.recipeBatch.length}} of {{this.recipeCount}} recipes selected
       </div>
     </div>
     <div class="row">
@@ -49,7 +60,7 @@ export default {
   components: {
     RecipeItem,
   },
-  props: ["recipeBatch"],
+  props: ["recipeBatch", "recipeCount"],
   data: function() {
     return {
       resultsPerPage: 25,
