@@ -1,5 +1,5 @@
 <template>
-  <div class="card hoverPointer" style="width: 350px" @click="getSingleRecipe()">
+  <div class="card hoverPointer" style="width: 330px" @click="getSingleRecipe()">
     <div class="card-title card-text-color text-center mb-4">
       {{recipe.name}}
     </div>
