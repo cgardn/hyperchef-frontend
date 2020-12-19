@@ -8,7 +8,7 @@
           <h4>Equipment you'll need</h4>
           <div class="row">
             <div
-              class="col-6"
+              class="col-12"
               v-for="(equip, idx) in recipe.equipment"
               :key="idx"
             >
