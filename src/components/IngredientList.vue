@@ -8,20 +8,41 @@
         :key="idx"
       >
         <div class="col-8">{{ingredient.name}}</div>
-        <div class="col" align="right" v-if="isMetric">{{ingredient.units.metric_show[0]}} {{ingredient.units.metric_show[1]}}</div>
-        <div class="col" align="right" v-else>{{ingredient.units.imperial_show[0]}} {{ingredient.units.imperial_show[1]}}</div>
-        <div class="col-1"></div>
+        <div class="col" v-if="isMetric">
+          {{ingredient.units.metric_show[0]*servingSize}} 
+          {{ingredient.units.metric_show[1]}}
+        </div>
+        <div class="col" v-else>
+          {{ingredient.units.imperial_show[0]*servingSize}}
+          {{ingredient.units.imperial_show[1]}}
+        </div>
       </div>
           
-      <div class="row ml-auto justify-content-end">
-        <div class="col" width="100%">
-          <button @click="toMetric()">
-            <span>Metric</span>
+      <div class="row mt-2">
+        <!-- serving sizes -->
+        <div class="col my-auto">
+          <button 
+            @click="changeServings(-1)"
+            class="btn btn-secondary btn-sm mr-2"
+            :disabled="servingSize <= 1"
+            >
+            <span>-1</span>
+          </button>
+          <span>{{servingSize}}</span>
+          <button 
+            @click="changeServings(+1)"
+            class="btn btn-secondary btn-sm ml-2"
+            >
+            <span>+1</span>
           </button>
         </div>
-        <div class="col pl-0 pr-3">
-          <button @click="toImperial()">
-            <span>Imperial</span>
+
+        <!-- units -->
+        <div class="col" align=right width="100%">
+          <button 
+            class="btn btn-secondary"
+            @click="toggleUnits()">
+            <span>Units</span>
           </button>
         </div>
       </div>
@@ -36,14 +57,16 @@ export default {
   data: function() {
     return {
       isMetric: true,
+      servingSize: 1,
     }
   },
   methods: {
-    toMetric: function() {
-      this.isMetric = true;
+    toggleUnits: function() {
+      this.isMetric = !this.isMetric;
+
     },
-    toImperial: function() {
-      this.isMetric = false;
+    changeServings: function(amt) {
+      this.servingSize += amt;
     },
   },
 }

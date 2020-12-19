@@ -3,7 +3,8 @@
     <h2 class="text-light mx-auto my-5" align="center">{{recipe.name}}</h2>
     <div class="row d-flex justify-content-center">
       <div class="col-12 col-md mx-auto">
-        <div class="card bg-grey">
+        <div class="container mb-2">
+        <div class="card bg-grey px-2 py-2">
           <h4>Equipment you'll need</h4>
           <div class="row">
             <div
@@ -15,6 +16,7 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
 
       <div class="col-12 col-md mx-auto">
@@ -23,15 +25,15 @@
     </div>
 
 
-    <div class="bg-light my-5 py-3">
+    <div class="row bg-light my-5 py-3">
       <div class="col-12">
         <h4>Steps:</h4>
       </div>
-      <div class="col-12"
+      <div class="col-12 mb-3"
         v-for="(step, idx) in recipe.actions"
         :key="idx"
       >
-        <b>{{step[0]}}</b>
+        <b>{{Number(idx)+1}}. {{step[0]}}</b>
         <br />
         <span>{{step[1]}}</span>
       </div>
