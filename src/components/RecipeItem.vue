@@ -3,7 +3,7 @@
     <div class="card-title card-text-color text-center mb-4">
       <h4>{{recipe.name}}</h4>
     </div>
-    <div class="row px-2 mb-2" align=left>
+    <div class="row px-3 mb-2" align=left>
       <div class="col-4 card-text justify-content-start my-auto pr-0">
         Skill:
       </div>
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="row align-items-start px-2 mb-2" align=left>
+    <div class="row align-items-start px-3 mb-2" align=left>
       <div class="col-4 card-text justify-content-start my-auto pr-0">
         Ingredients: 
       </div>

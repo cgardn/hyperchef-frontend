@@ -3,10 +3,10 @@
     <div class="row mb-4">
       <div class="col-5 offset-1 col-md-2">
         <div class="row d-flex flex-column">
-          <div class="col">
+          <div class="col pl-0">
             <span class="text-light">Results per page:</span>
           </div>
-          <div class="col-7 col-md">
+          <div class="col-8 col-md pl-0">
             <select 
               v-model="resultsPerPage" 
               class="form-control">
