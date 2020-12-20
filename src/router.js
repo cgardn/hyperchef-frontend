@@ -4,7 +4,7 @@ import Router from 'vue-router'
 // Page components
 import Home from './views/Home.vue';
 import RecipeView from './views/RecipeView.vue';
-import Admin from './views/Admin.vue';
+import Admin from './views/admin/Admin.vue';
 
 Vue.use(Router)
 
