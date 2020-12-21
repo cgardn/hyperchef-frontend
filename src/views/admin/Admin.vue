@@ -46,12 +46,26 @@
 
       <!-- recipe list -->
       <div class="card" v-if="currentComponent=='recipeList'">
-        <span class="text-light">List of recipes</span>
-        <div v-for="(recipe, idx) in Object.keys(currentData)" :key="idx">
-          <a @click="getRecipe(recipe)">
-            {{currentData[recipe][0]}} : {{currentData[recipe][1]}}
+        <div v-for="(recipeId, idx) in Object.keys(currentData)" :key="idx">
+          <a @click="getRecipe(recipeId)">
+            {{currentData[recipeId]['name']}}
           </a>
           <br />
+        </div>
+      </div>
+
+      <!-- single recipe form -->
+      <div class="card" v-if="currentComponent=='singleRecipe'">
+        <div v-for="(attr, idx) in Object.keys(currentData)" :key="idx">
+          <div v-if="attr == 'actions'">
+            Actions: <br />
+            <div v-for="(step, idy) in Object.keys(currentData[attr])" :key="idy">
+              {{step}} : {{currentData[attr][step]}}
+            </div>
+          </div>
+          <div v-else>
+          {{attr}} : {{currentData[attr]}}
+          </div>
         </div>
       </div>
 
@@ -59,7 +73,7 @@
       <div class="card" v-if="currentComponent=='newRecipe'">
         <div 
           class="row"
-          v-for="(field, idx) in Object.keys(newRecipeForm)"
+          v-for="(field, idx) in Object.keys(newRecipeTemplate)"
           :key="idx"
         >
           <div class="col">
@@ -80,9 +94,20 @@
 
       <!-- ingredient tags -->
       <div class="card" v-if="currentComponent=='ingredientTagList'">
-        <div class="row" v-for="(eq, idx) in currentData" :key="idx">
+        <div v-if="adminLoading">
+          <span>Submitting changes...</span>
+          <span>{{this.adminMsg}}</span>
+        </div>
+        <div class="row"
+          v-for="(iTag, idx) in Object.keys(currentData)"
+          :key="idx">
           <div class="col">
-            {{eq}}
+            <span>ID: {{iTag}} </span>
+            <span>Name: </span>
+            <input type="text" v-model="currentData[iTag]['name']">
+            <button @click="updateIngredientTag(iTag, currentData[iTag]['name'])">
+              Submit
+            </button>
           </div>
         </div>
       </div>
@@ -104,12 +129,15 @@
 <script>
 // Yes I know this is a giant ugly all-in-one component
 // cut me some slack i was in a hurry
+
 export default {
   name: "Admin",
   data: function() {
     return {
       username: "",
       password: "",
+      adminLoading: false,
+      adminMsg: "",
       isLoading: false,
       isAuth: false,
       currentComponent: "",
@@ -129,6 +157,16 @@ export default {
     }
   },
   computed: {
+    newRecipeTemplate: function() {
+      let blankRecipe;
+      if (sessionStorage.getItem('adminData')) {
+        blankRecipe = JSON.parse(sessionStorage.getItem('adminData')).recipes[1];
+      }
+      Object.keys(blankRecipe).forEach(k => {
+        blankRecipe[k] = "";
+      });
+      return blankRecipe;
+    },
     haveData: function() {
       return sessionStorage.getItem('adminData');
     },
@@ -138,6 +176,36 @@ export default {
     sessionStorage.removeItem('token');
   },
   methods: {
+    updateIngredientTag: async function(id, name) {
+      /*
+      let iTags = JSON.parse(sessionStorage.getItem('adminData')).ingredient_tags;
+      console.log(`old itag: ${id}, ${iTags[id]['name']}`);
+      iTags[id]['name'] = name;
+      console.log(`New itag: ${id}, ${iTags[id]['name']}`);
+      */
+
+      let formData = new FormData();
+      formData.append('name', name);
+
+      this.adminLoading = true;
+      await this.$axios.patch(
+        `${this.$backend}/api/${this.$apiVersion}/admin/ingredient_tags/${id}`, 
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        },
+      ).then( res => {
+        this.adminLoading = false;
+        if (res.status == 200) {
+          this.adminMsg = "Success";
+        } else {
+          this.adminMsg = "Failed";
+        }
+
+      });
+    },
     downloadData: async function() {
       this.isLoading = true;
       await this.$axios.get(
@@ -174,7 +242,9 @@ export default {
       this.currentData=JSON.parse(sessionStorage.getItem('adminData')).equipment;
     },
     getRecipe: function(id) {
-      console.log(`get recipe ${id}`);
+      this.currentComponent="singleRecipe";
+      const recipes = JSON.parse(sessionStorage.getItem('adminData')).recipes
+      this.currentData=recipes[id];
     },
     login: async function() {
       let formData = new FormData();
