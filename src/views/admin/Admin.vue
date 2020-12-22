@@ -55,33 +55,18 @@
       </div>
 
       <!-- single recipe form -->
-      <div class="card" v-if="currentComponent=='singleRecipe'">
-        <div v-for="(attr, idx) in Object.keys(currentData)" :key="idx">
-          <div v-if="attr == 'actions'">
-            Actions: <br />
-            <div v-for="(step, idy) in Object.keys(currentData[attr])" :key="idy">
-              {{step}} : {{currentData[attr][step]}}
-            </div>
-          </div>
-          <div v-else>
-          {{attr}} : {{currentData[attr]}}
-          </div>
-        </div>
-      </div>
+      <RecipeForm
+        v-if="currentComponent=='singleRecipe'"
+        :new="false"
+        :recipe="currentData"
+      ></RecipeForm>
 
       <!-- new recipe form -->
-      <div class="card" v-if="currentComponent=='newRecipe'">
-        <div 
-          class="row"
-          v-for="(field, idx) in Object.keys(newRecipeTemplate)"
-          :key="idx"
-        >
-          <div class="col">
-            {{field}}
-            <input v-model="newRecipeForm[field]" type="text">
-          </div>
-        </div>
-      </div>
+      <RecipeForm
+        v-if="currentComponent=='newRecipe'"
+        :new="true"
+        :recipe="{}"
+        ></RecipeForm>
 
       <!-- ingredient list -->
       <div class="card" v-if="currentComponent=='ingredientList'">
@@ -130,11 +115,13 @@
 // Yes I know this is a giant ugly all-in-one component
 // cut me some slack i was in a hurry
 import IngredientForm from '@/views/admin/IngredientForm'
+import RecipeForm from '@/views/admin/RecipeForm'
 
 export default {
   name: "Admin",
   components: {
     IngredientForm,
+    RecipeForm,
   },
   data: function() {
     return {
