@@ -85,9 +85,9 @@
 
       <!-- ingredient list -->
       <div class="card" v-if="currentComponent=='ingredientList'">
-        <div class="row" v-for="(ing, idx) in currentData" :key="idx">
+        <div class="row" v-for="(ing, idx) in Object.keys(currentData)" :key="idx">
           <div class="col">
-            <IngredientForm :data="ing"></IngredientForm>
+            <IngredientForm :id="ing" :data="currentData[ing]"></IngredientForm>
           </div>
         </div>
       </div>
