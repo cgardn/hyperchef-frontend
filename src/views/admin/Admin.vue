@@ -85,9 +85,9 @@
 
       <!-- ingredient list -->
       <div class="card" v-if="currentComponent=='ingredientList'">
-        <div class="row" v-for="(eq, idx) in currentData" :key="idx">
+        <div class="row" v-for="(ing, idx) in currentData" :key="idx">
           <div class="col">
-            {{eq}}
+            <IngredientForm :data="ing"></IngredientForm>
           </div>
         </div>
       </div>
@@ -129,9 +129,13 @@
 <script>
 // Yes I know this is a giant ugly all-in-one component
 // cut me some slack i was in a hurry
+import IngredientForm from '@/views/admin/IngredientForm'
 
 export default {
   name: "Admin",
+  components: {
+    IngredientForm,
+  },
   data: function() {
     return {
       username: "",
@@ -177,12 +181,6 @@ export default {
   },
   methods: {
     updateIngredientTag: async function(id, name) {
-      /*
-      let iTags = JSON.parse(sessionStorage.getItem('adminData')).ingredient_tags;
-      console.log(`old itag: ${id}, ${iTags[id]['name']}`);
-      iTags[id]['name'] = name;
-      console.log(`New itag: ${id}, ${iTags[id]['name']}`);
-      */
 
       let formData = new FormData();
       formData.append('name', name);
