@@ -17,11 +17,12 @@
       <div class="card">
         <button @click="downloadData" class="btn btn-info">Get Data</button>
         <div class="row">
-          <div class="col">
-            <button @click="allRecipes">Recipe List</button>
+          <div class="col" v-for="tab in components" :key="tab">
+            <button @click="currentComponent = tab">{{tab}}</button>
           </div>
+          <!--
           <div class="col">
-            <button @click="newRecipe">New Recipe</button>
+            <button @click="curren">New Recipe</button>
           </div>
           <div class="col">
             <button @click="allIngredients">Ingredients</button>
@@ -32,41 +33,15 @@
           <div class="col">
             <button @click="allEquipment">Equipment</button>
           </div>
+          -->
         </div>
-      </div>
-      <div class="text-light" v-if="!haveData">
-        No Data
-      </div>
-      <div class="text-light" v-else>
-        Data loaded
       </div>
       <div v-if="isLoading">
         <span class="text-light">Waiting for data from server</span>
       </div>
 
-      <!-- recipe list -->
-      <div class="card" v-if="currentComponent=='recipeList'">
-        <div v-for="(recipeId, idx) in Object.keys(currentData)" :key="idx">
-          <a @click="getRecipe(recipeId)">
-            {{currentData[recipeId]['name']}}
-          </a>
-          <br />
-        </div>
-      </div>
-
-      <!-- single recipe form -->
-      <RecipeForm
-        v-if="currentComponent=='singleRecipe'"
-        :new="false"
-        :recipe="currentData"
-      ></RecipeForm>
-
-      <!-- new recipe form -->
-      <RecipeForm
-        v-if="currentComponent=='newRecipe'"
-        :new="true"
-        :recipe="{}"
-        ></RecipeForm>
+      <!-- tab container -->
+      <component :is="currentComponent"></component>
 
       <!-- ingredient list -->
       <div class="card" v-if="currentComponent=='ingredientList'">
@@ -112,34 +87,26 @@
 </template>
 
 <script>
-// Yes I know this is a giant ugly all-in-one component
-// cut me some slack i was in a hurry
 import IngredientForm from '@/views/admin/IngredientForm'
-import RecipeForm from '@/views/admin/RecipeForm'
+import RecipeList from '@/views/admin/RecipeList'
 
 export default {
   name: "Admin",
   components: {
     IngredientForm,
-    RecipeForm,
+    RecipeList,
   },
   data: function() {
     return {
+      components: ["RecipeList", "IngredientForm"],
+      currentComponent: "",
       username: "",
       password: "",
       adminLoading: false,
       adminMsg: "",
       isLoading: false,
       isAuth: false,
-      currentComponent: "",
       currentData: {},
-      newRecipeForm: {
-        name: "",
-        origin: "",
-        author: "",
-        cook_time: "",
-        prep_time: "",
-      },
       recipes: {},
       recipe_types: [],
       ingredients: [],
@@ -148,15 +115,8 @@ export default {
     }
   },
   computed: {
-    newRecipeTemplate: function() {
-      let blankRecipe;
-      if (sessionStorage.getItem('adminData')) {
-        blankRecipe = JSON.parse(sessionStorage.getItem('adminData')).recipes[1];
-      }
-      Object.keys(blankRecipe).forEach(k => {
-        blankRecipe[k] = "";
-      });
-      return blankRecipe;
+    recipeList: function() {
+      return JSON.parse(sessionStorage.getItem('recipeList'));
     },
     haveData: function() {
       return sessionStorage.getItem('adminData');
@@ -209,7 +169,19 @@ export default {
     },
     allRecipes: async function() {
       this.currentComponent="recipeList";
-      this.currentData=JSON.parse(sessionStorage.getItem('adminData')).recipes;
+      await this.$axios.get(
+        `${this.$backend}/api/${this.$apiVersion}/admin/recipes`,
+        {
+          headers: {
+            authorization: sessionStorage.getItem('token'),
+          }
+        },
+      ).then( res => {
+        if (res.status == 200) {
+          sessionStorage.setItem('recipeList', JSON.stringify(res.data));
+        }
+      });
+      //this.currentData=JSON.parse(sessionStorage.getItem('adminData')).recipes;
     },
     newRecipe: function() {
       this.currentComponent="newRecipe";
