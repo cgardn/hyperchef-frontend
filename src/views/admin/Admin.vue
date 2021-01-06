@@ -87,18 +87,20 @@
 </template>
 
 <script>
-import IngredientForm from '@/views/admin/IngredientForm'
 import RecipeList from '@/views/admin/RecipeList'
+import Ingredients from '@/views/admin/Ingredients'
+import IngredientForm from '@/views/admin/IngredientForm'
 
 export default {
   name: "Admin",
   components: {
-    IngredientForm,
     RecipeList,
+    IngredientForm,
+    Ingredients,
   },
   data: function() {
     return {
-      components: ["RecipeList", "IngredientForm"],
+      components: ["RecipeList", "Ingredients", "IngredientForm"],
       currentComponent: "",
       username: "",
       password: "",

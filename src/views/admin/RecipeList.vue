@@ -29,12 +29,10 @@ import RecipeForm from '@/views/admin/RecipeForm'
 export default {
   name: "RecipeList",
   components: { RecipeForm },
-  props: ["recipes"],
   data: function() {
     return {
       recipeList: [],
       recipeView: false,
-      isNewRecipe: false,
     }
   },
   created: async function() {

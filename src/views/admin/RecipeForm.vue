@@ -256,26 +256,6 @@ export default {
         this.formData.recipe.action_array = JSON.parse(this.formData.recipe.action_array)
         console.log(err);
       });
-      // dirty hack to get the action steps through the strong params,
-      //   easier (faster) than changing the whole data model on the 
-      //   backend
-      /*
-      let fixedActions = []
-      Object.keys(this.formData.actions).forEach(key => {
-        fixedActions.push({
-          title: this.formData.actions[key][0],
-          body: this.formData.actions[key][1]
-        })
-      })
-      const fixedData = Object.keys(this.formData).reduce( (obj, key) => {
-        if (key == 'actions')
-          obj[key] = fixedActions
-        else
-          obj[key] = this.formData[key]
-        return obj
-      }, {})
-
-      */
     },
     deleteRecipe: async function() {
       this.isSubmitting = true;
@@ -290,11 +270,13 @@ export default {
         if (res.status == 200) {
           this.$router.push('/admin')
           this.submitStatus = "Success"
-        } else {
-          this.submitStatus = "Failed"
+          this.isSubmitting = false;
         }
+      }).catch( err => {
+        console.log(err)
+        this.submitStatus = "Failed"
         this.isSubmitting = false;
-      })
+      });
     },
   },
 }
