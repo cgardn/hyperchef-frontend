@@ -30,7 +30,7 @@
         <h4>Steps:</h4>
       </div>
       <div class="col-12 mb-3"
-        v-for="(step, idx) in recipe.actions"
+        v-for="(step, idx) in recipe.action_array"
         :key="idx"
       >
         <b>{{Number(idx)+1}}. {{step[0]}}</b>

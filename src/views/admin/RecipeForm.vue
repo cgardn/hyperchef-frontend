@@ -210,6 +210,28 @@ export default {
         this.sendUpdate()
     },
     sendCreate: async function() {
+      this.isSubmitting = true;
+      this.formData.recipe.action_array = JSON.stringify(this.formData.recipe.action_array)
+      this.$axios.post(
+        `${this.$backend}/api/${this.$apiVersion}/admin/recipes/`,
+        this.formData,
+        {
+          headers: {
+            authorization: sessionStorage.getItem('token')
+          }
+        }
+      ).then( res => {
+        if (res.status == 200) {
+          this.isSubmitting = false;
+          this.submitStatus = "Success"
+          this.formData.recipe.action_array = JSON.parse(this.formData.recipe.action_array)
+        }
+      }).catch(err => {
+        this.isSubmitting = false;
+        this.submitStatus = "Failed"
+        this.formData.recipe.action_array = JSON.parse(this.formData.recipe.action_array)
+        console.log(err);
+      });
     },
     sendUpdate: async function() {
       this.isSubmitting = true;
