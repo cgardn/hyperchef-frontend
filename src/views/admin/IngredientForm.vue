@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div>
-      <span>ID: {{this.formData.ing.id}}</span>
+      <span>ID: {{formData.ing.id}}</span>
     </div>
     <div>
       <span>Name:</span>
@@ -55,10 +55,8 @@
 export default {
   name: "IngredientForm",
   props: ["ingredientId"],
-  created: async function() {
-    if (this.ingredientId == 'new') {
-      this.formData = this.blankForm
-    } else {
+  mounted: async function() {
+    if (!this.ingredientId != 'new') {
       // ingredient info
       this.$axios.get(
         `${this.$backend}/api/${this.$apiVersion}/admin/ingredients/${this.ingredientId}`,
@@ -74,6 +72,7 @@ export default {
       }).catch(err => {
         console.log(err);
       });
+    }
       // ingredient tags
       this.$axios.get(
         `${this.$backend}/api/${this.$apiVersion}/admin/ingredient_tags`,
@@ -89,7 +88,6 @@ export default {
       }).catch(err => {
         console.log(err);
       });
-    }
   },
   data: function() {
     return {
@@ -97,17 +95,19 @@ export default {
       iTags: [],
       submitStatus: "",
       isSubmitting: false,
-      formData: {},
-      blankForm: {
-        id: '',
-        caloriespergram: '',
-        name: "",
-        units: {
-          imperial_list: ['',''],
-          imperial_show: ['',''],
-          metric_list: ['',''],
-          metric_show: ['',''],
+      formData: {
+        ing: {
+          id: '',
+          caloriespergram: '',
+          name: "",
+          units: {
+            imperial_list: ['',''],
+            imperial_show: ['',''],
+            metric_list: ['',''],
+            metric_show: ['',''],
+          },
         },
+        iTags: [],
       },
     }
   },

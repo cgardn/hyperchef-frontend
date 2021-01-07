@@ -19,7 +19,7 @@
         <ToggleButton
           v-for="(filter, idy) in itags[itag]"
           :key="idy"
-          :active="ingredientTags[filter].state"
+          :active="ingredients[filter].state"
           @click="emitToggle(filter)"
           >{{filter}}</ToggleButton>
       </div>
@@ -35,7 +35,6 @@ export default {
   data: function() {
     return {
       itags: {},
-      ingredientTags: {},
     }
   },
   components: {
@@ -50,23 +49,39 @@ export default {
     },
     ingredients: function() {
       return Object.fromEntries(Object.entries(this.filterList).filter(
-        i => i[1].type == "ingredient")
+        i => !i[1].type)
       )
     },
   },
   created: function() {
     // pull out the ingredients by type
-    //  we do this here so the "main" data being operated on remains a 
-    //    name-keyed hash on the parent view (Home) for faster lookups
+    //  we do this here instead of on the backend, so that the "main" data
+    //  being operated on in the parent Home view remains a name-keyed Object 
+    //  for faster lookups. This FilterPanel just displays the buttons and
+    //  emits a name to the parent when a button is clicked. The state of all
+    //  the buttons is received as a prop
+    
     Object.entries(this.filterList).forEach(ing => {
-      if (ing[1].itag) {
-        if (!this.itags[ing[1].itag]) {
-          this.itags[ing[1].itag] = [ing[0]]
-        } else {
-          this.itags[ing[1].itag].push(ing[0])
-        }
-        this.ingredientTags[ing[0]] = ing[1]
-      }
+      // ing[0] is String: name of ingredient
+      // ing[1] is Object: {itags: Array of String tag names
+      //                    state: Bool filter toggle state}
+      // maybe I dont need to do this in created() as a separate thing,
+      //   maybe a computed property would be enough?
+
+      // look at each entry in the filterList prop (i.e. an ingredient)
+      // add the ingredient to each itag list on this.itags, for each on that
+      //   ingredients own list of applied tags
+
+      // skip recipe types, they don't have lists of ingredients
+      if (ing[1].type && ing[1].type == 'recipeType')
+        return
+      // create array on this.itags if it doesn't exist yet
+      ing[1].itags.forEach(iTag => {
+        if (!this.itags[iTag])
+          this.itags[iTag] = [ing[0]]
+        else
+          this.itags[iTag].push(ing[0])
+      });
     });
   },
   methods: {
