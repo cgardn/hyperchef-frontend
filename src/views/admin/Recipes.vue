@@ -27,7 +27,7 @@
 import RecipeForm from '@/views/admin/RecipeForm'
 
 export default {
-  name: "RecipeList",
+  name: "Recipe",
   components: { RecipeForm },
   data: function() {
     return {

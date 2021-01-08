@@ -87,20 +87,30 @@
 </template>
 
 <script>
-import RecipeList from '@/views/admin/RecipeList'
+import RecipeList from '@/views/admin/Recipes'
+import RecipeTypes from '@/views/admin/RecipeTypes'
 import Ingredients from '@/views/admin/Ingredients'
-import IngredientForm from '@/views/admin/IngredientForm'
+import IngredientTags from '@/views/admin/IngredientTags'
+import Equipment from '@/views/admin/Equipment'
 
 export default {
   name: "Admin",
   components: {
     RecipeList,
-    IngredientForm,
+    RecipeTypes,
     Ingredients,
+    IngredientTags,
+    Equipment,
   },
   data: function() {
     return {
-      components: ["RecipeList", "Ingredients", "IngredientForm"],
+      components: [
+        "RecipeList",
+        "RecipeTypes",
+        "Ingredients",
+        "IngredientTags",
+        "Equipment",
+      ],
       currentComponent: "",
       username: "",
       password: "",
