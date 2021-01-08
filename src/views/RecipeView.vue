@@ -63,6 +63,7 @@ export default {
       url: `${this.$backend}/api/${this.$apiVersion}/recipes/${this.recipeSlug}`,
     }).then( res => {
       if (res.status == 200) {
+        console.log(res.data);
         this.recipe = res.data;
       }
     })
