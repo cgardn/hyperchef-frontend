@@ -1,5 +1,5 @@
 <template>
-  <div class="container bg-light">
+  <div class="container bg-light py-3">
     <div class="row">
       <div class="col">
         <input type="text" v-model="newEquip">

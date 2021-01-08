@@ -1,5 +1,5 @@
 <template>
-  <div class="container bg-light">
+  <div class="container bg-light py-3">
     <div class="row">
       <div class="col">
         <input type="text" v-model="newType">
@@ -7,7 +7,7 @@
       </div>
     </div>
     <hr />
-    <div class="row" v-for="type in typeList" :key="type">
+    <div class="row" v-for="type in typeList" :key="type[0]">
       <div class="col">
         <input type="text" v-model="type[1]">
         <button @click="updateType(type[0], type[1])">Update</button>
