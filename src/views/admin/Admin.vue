@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import RecipeList from '@/views/admin/Recipes'
+import Recipes from '@/views/admin/Recipes'
 import RecipeTypes from '@/views/admin/RecipeTypes'
 import Ingredients from '@/views/admin/Ingredients'
 import IngredientTags from '@/views/admin/IngredientTags'
@@ -40,7 +40,7 @@ import Equipment from '@/views/admin/Equipment'
 export default {
   name: "Admin",
   components: {
-    RecipeList,
+    Recipes,
     RecipeTypes,
     Ingredients,
     IngredientTags,
@@ -49,7 +49,7 @@ export default {
   data: function() {
     return {
       components: [
-        "RecipeList",
+        "Recipes",
         "RecipeTypes",
         "Ingredients",
         "IngredientTags",

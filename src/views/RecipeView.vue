@@ -9,7 +9,7 @@
           <div class="row">
             <div
               class="col-12"
-              v-for="(equip, idx) in recipe.equipment"
+              v-for="(equip, idx) in equipment"
               :key="idx"
             >
               <EquipmentLink :equipment="equip"></EquipmentLink>
@@ -20,7 +20,7 @@
       </div>
 
       <div class="col-12 col-md mx-auto">
-        <IngredientList :ingredients="recipe.ingredients"></IngredientList>
+        <IngredientList :ingredients="ingredients"></IngredientList>
       </div>
     </div>
 
@@ -63,8 +63,9 @@ export default {
       url: `${this.$backend}/api/${this.$apiVersion}/recipes/${this.recipeSlug}`,
     }).then( res => {
       if (res.status == 200) {
-        console.log(res.data);
-        this.recipe = res.data;
+        this.recipe = res.data['recipe'];
+        this.ingredients = res.data['ingredients'];
+        this.equipment = res.data['equipment'];
       }
     })
   },
