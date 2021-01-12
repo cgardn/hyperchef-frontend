@@ -55,6 +55,8 @@ export default {
   data: function() {
     return {
       recipe: {},
+      equipment: [],
+      ingredients: [],
     }
   },
   mounted: async function() {
