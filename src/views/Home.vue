@@ -77,7 +77,7 @@ export default {
     return {
       all_filters: {},
       all_recipes: {},
-      sorted_recipes: {},
+      sorted_recipe_ids: {},
       selectedFilters: [],
       visibleRecipes: [],
       query: "",
@@ -108,7 +108,7 @@ export default {
       // for each selected filter, perform a series of intersections to get
       //   to the final set of selected recipes
       this.selectedFilters.forEach(tag => {
-        out = this.intersectArrays(out, this.sorted_recipes[tag])
+        out = this.intersectArrays(out, this.sorted_recipe_ids[tag])
       })
       this.visibleRecipes = out.map(id => this.all_recipes[id])
     },
@@ -145,7 +145,7 @@ export default {
       let data = JSON.parse(localStorage.getItem("recipeGraph"));
       this.all_recipes = data.all_recipes;
       this.all_filters = data.all_filters;
-      this.sorted_recipes = data.sorted_recipe_ids;
+      this.sorted_recipe_ids = data.sorted_recipe_ids;
       this.visibleRecipes = Object.keys(this.all_recipes).map(id => this.all_recipes[id]);
     },
   },
