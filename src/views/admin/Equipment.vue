@@ -32,7 +32,9 @@ export default {
       }
     ).then( res => {
       if (res.status == 200) {
-        this.equipList = res.data;
+        this.equipList = res.data.sort( (a,b) => {
+          return (a[1] > b[1]) ? 1 : -1;
+        });
       }
     });
   },

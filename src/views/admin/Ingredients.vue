@@ -45,7 +45,9 @@ export default {
       }
     ).then( res => {
       if (res.status == 200) {
-        this.ingredientList = res.data;
+        this.ingredientList = res.data.sort( (a,b) => {
+          return (a[1] > b[1]) ? 1 : -1;
+        });
       }
     });
   },

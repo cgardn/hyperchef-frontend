@@ -134,7 +134,7 @@ export default {
         }
       ).then(res => {
         if (res.status == 200) {
-          this.ingredients = res.data;
+          this.ingredients = res.data.sort(this.sortFunction);
         }
       });
       // equipment
@@ -147,7 +147,7 @@ export default {
         }
       ).then(res => {
         if (res.status == 200) {
-          this.equipment = res.data;
+          this.equipment = res.data.sort(this.sortFunction);
         }
       });
       // recipe types
@@ -160,7 +160,7 @@ export default {
         }
       ).then(res => {
         if (res.status == 200) {
-          this.rTypes = res.data;
+          this.rTypes = res.data.sort(this.sortFunction);
         }
       });
 
@@ -195,6 +195,9 @@ export default {
     }
   },
   methods: {
+    sortFunction: function(a,b) {
+      return (a[1] > b[1]) ? 1 : -1;
+    },
     addAction: function() {
       this.formData.recipe.action_array.push( ['',''] );
       // not ideal, but the reactivity on formData is being weird
