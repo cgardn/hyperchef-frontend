@@ -65,6 +65,17 @@
       </span>
     </div>
     <div>
+      <h6>New Ingredients</h6>
+      <RecipeIngredientInput 
+        v-for="(ing, idx) in ingredients" 
+        :key="idx"
+        :first="idx == 0"
+        :ingProp="ing"
+        :checked="formDataIncludes(ing)"
+        v-on:input="updateFormDataIngredients"
+      />
+    </div>
+    <div>
       <h6>Ingredients</h6>
       <span v-for="(type, idx) in ingredients" :key="idx">
         <input
@@ -98,14 +109,16 @@
 </template>
 
 <script>
+import RecipeIngredientInput from '@/components/admin/RecipeIngredientInput'
 export default {
   name: "RecipeForm",
   props: ["recipeId"],
+  components: { RecipeIngredientInput },
   created: async function() {
     if (this.recipeId == 'new') {
       this.formData = this.blankForm;
     } else {
-      // Get recipe data
+      // Get recipe data, and ingredients and rTypes for checkboxes
       this.$axios.get(
        `${this.$backend}/api/${this.$apiVersion}/admin/recipes/${this.recipeId}`,
         {
@@ -115,29 +128,17 @@ export default {
         }
       ).then(res => {
         if (res.status == 200) {
-          this.formData = res.data;
+          this.formData = res.data.recipe;
+          this.ingredients = res.data.ingredients.sort(this.sortIngredients);
+          this.rTypes = res.data.rTypes.sort(this.sortFunction);
+
           if (this.formData.recipe.action_array === null) {
             this.formData.recipe.action_array = ['','']
           }
         }
       });
     }
-      // now get ingredient, equipment, and recipe type ids and names,
-      //   for the checkbox sections
-      // ingredients
-      this.$axios.get(
-       `${this.$backend}/api/${this.$apiVersion}/admin/ingredients/`,
-        {
-          headers: {
-            authorization: sessionStorage.getItem('token'),
-          },
-        }
-      ).then(res => {
-        if (res.status == 200) {
-          this.ingredients = res.data.sort(this.sortFunction);
-        }
-      });
-      // equipment
+      // now get equipment for the checkbox sections
       this.$axios.get(
        `${this.$backend}/api/${this.$apiVersion}/admin/equipment/`,
         {
@@ -150,20 +151,6 @@ export default {
           this.equipment = res.data.sort(this.sortFunction);
         }
       });
-      // recipe types
-      this.$axios.get(
-       `${this.$backend}/api/${this.$apiVersion}/admin/recipe_types/`,
-        {
-          headers: {
-            authorization: sessionStorage.getItem('token'),
-          },
-        }
-      ).then(res => {
-        if (res.status == 200) {
-          this.rTypes = res.data.sort(this.sortFunction);
-        }
-      });
-
     },
   data: function() {
     return {
@@ -195,6 +182,19 @@ export default {
     }
   },
   methods: {
+    updateFormDataIngredients: function(value) {
+      if (this.formData.ingredients.some(i => i[0] == value[0])) {
+        this.formData.ingredients = this.formData.ingredients.filter( i =>  i[0] !== value[0])
+      } else {
+        this.formData.ingredients.push(value)
+      }
+    },
+    formDataIncludes: function(obj) {
+      return this.formData.ingredients.some(i => i[0] == obj[0])
+    },
+    sortIngredients: function(a,b) {
+      return (a[1] > b[1]) ? 1 : -1;
+    },
     sortFunction: function(a,b) {
       return (a[1] > b[1]) ? 1 : -1;
     },
