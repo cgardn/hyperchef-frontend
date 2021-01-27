@@ -75,18 +75,6 @@
         v-on:input="updateFormDataIngredients"
       />
     </div>
-    <div>
-      <h6>Ingredients</h6>
-      <span v-for="(type, idx) in ingredients" :key="idx">
-        <input
-          type="checkbox"
-          :id="Number(type[0])"
-          :value="type[0]"
-          v-model="formData.ingredients"
-        >
-          <label :for="type">{{type[1]}}</label>
-      </span>
-    </div>
     <div class="row">
       <div class="col">
         <button @click="submit" :disabled="isSubmitting">
@@ -117,6 +105,32 @@ export default {
   created: async function() {
     if (this.recipeId == 'new') {
       this.formData = this.blankForm;
+      // get list of ingredients
+      this.$axios.get(
+        `${this.$backend}/api/${this.$apiVersion}/admin/ingredients`,
+        {
+          headers: {
+            authorization: sessionStorage.getItem('token'),
+          },
+        }
+      ).then(res => {
+        if (res.status == 200) {
+          this.ingredients = res.data.sort(this.sortIngredients);
+        }
+      });
+      // get list of rTypes
+      this.$axios.get(
+        `${this.$backend}/api/${this.$apiVersion}/admin/recipe_types`,
+        {
+          headers: {
+            authorization: sessionStorage.getItem('token'),
+          },
+        }
+      ).then(res => {
+        if (res.status == 200) {
+          this.rTypes = res.data.sort(this.sortFunction);
+        }
+      });
     } else {
       // Get recipe data, and ingredients and rTypes for checkboxes
       this.$axios.get(
