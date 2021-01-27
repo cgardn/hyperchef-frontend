@@ -86,7 +86,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.card {
+  color: $theme-poplight;
+  background-color: $theme-offdark;
+}
 .hoverPointer:hover {
   cursor: pointer;
 }

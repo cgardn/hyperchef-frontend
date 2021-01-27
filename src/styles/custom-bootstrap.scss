@@ -1,0 +1,8 @@
+// functions first
+@import "../../node_modules/bootstrap/scss/_functions.scss";
+
+// custom file
+@import "./_variables.scss";
+
+// bootstrap file that compiles the CSS
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
