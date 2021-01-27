@@ -88,7 +88,7 @@ export default {
 
 <style scoped lang="scss">
 .card {
-  color: $theme-poplight;
+  color: $theme-offwhite;
   background-color: $theme-offdark;
 }
 .hoverPointer:hover {

@@ -1,23 +1,6 @@
 <template>
   <div class="container">
-    <div class="row mb-4">
-      <div class="col-5 offset-1 col-md-2">
-        <div class="row d-flex flex-column">
-          <div class="col pl-0">
-            <span class="text-light">Results per page:</span>
-          </div>
-          <div class="col-8 col-md pl-0">
-            <select 
-              v-model="resultsPerPage" 
-              class="form-control">
-              <option>10</option>
-              <option>25</option>
-              <option>50</option>
-              <option>100</option>
-            </select>
-          </div>
-        </div>
-      </div>
+    <div class="row mb-3">
       <div class="col mt-auto text-light">
         <button
           type="button"
@@ -33,13 +16,11 @@
           :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
           >&#8594;</button>
       </div>
-    </div>
-    <div class="row mb-3 mt-auto text-light">
-      <div class="col offset-1">
-        {{this.recipeBatch.length}} of {{this.recipeCount}} recipes selected
+      <div class="col mt-auto mr-auto text-center">
+        {{this.recipeBatch.length}} of {{this.recipeCount}} recipes
       </div>
     </div>
-    <div class="row">
+    <div class="row custom-overflow">
       <div
         class="col mb-4"
         align="center"
@@ -106,3 +87,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.custom-overflow {
+  height: 70vh;
+  overflow-y: scroll;
+}
+</style>

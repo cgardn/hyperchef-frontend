@@ -31,11 +31,14 @@
     <div class="row" v-if="isFilterPanelVisible">
       <FilterPanel
         :filterList="all_filters"
+        :visibleCount="visibleRecipes.length"
+        :allCount="Object.keys(all_recipes).length"
         @toggleBtn="toggleFilter"
         @clearBtn="clearSelectedFilters"
         ></FilterPanel>
     </div>
     
+    <!--
     <div class="row" align="center" v-if="isFilterPanelVisible">
       <div class="col" align="right">
         <button @click="toggleFilterPanel()">
@@ -48,10 +51,15 @@
         <button @click="clearSelectedFilters">Clear Filters</button>
       </div>
     </div>
+    -->
 
     <!-- recipe list -->
-    <div class="row">
-      <div class="col-2 mt-5 mx-auto text-light" align="center" v-if="loadingRecipesSpinner">
+    <div class="row" v-if="!isFilterPanelVisible">
+      <div 
+        v-if="loadingRecipesSpinner"
+        class="col-2 mt-5 mx-auto text-light"
+        align="center"
+      >
         <h2>Loading...</h2>
       </div>
       <PaginatedResults
