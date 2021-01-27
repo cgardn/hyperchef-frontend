@@ -12,7 +12,7 @@
     <div class="row my-3 d-flex justify-space-evenly" align="center">
 
       <div class="col" align="right">
-        <button @click="toggleFilterPanel()">
+        <button class="btn bg-light" @click="toggleFilterPanel()">
           <span v-if="isFilterPanelVisible">
             Hide Filters
           </span>
@@ -22,7 +22,7 @@
         </button>
       </div>
       <div class="col" align="left">
-        <button @click="clearSelectedFilters">Clear Filters</button>
+        <button class="btn bg-light" @click="clearSelectedFilters">Clear Filters</button>
       </div>
 
     </div>
@@ -37,21 +37,6 @@
         @clearBtn="clearSelectedFilters"
         ></FilterPanel>
     </div>
-    
-    <!--
-    <div class="row" align="center" v-if="isFilterPanelVisible">
-      <div class="col" align="right">
-        <button @click="toggleFilterPanel()">
-          <span v-if="isFilterPanelVisible">
-            Hide Filters
-          </span>
-        </button>
-      </div>
-      <div class="col" align="left">
-        <button @click="clearSelectedFilters">Clear Filters</button>
-      </div>
-    </div>
-    -->
 
     <!-- recipe list -->
     <div class="row" v-if="!isFilterPanelVisible">

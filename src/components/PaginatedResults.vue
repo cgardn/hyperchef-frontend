@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row mb-3">
-      <div class="col mt-auto text-light">
+      <div class="col mt-auto text-light text-center">
         <button
           type="button"
           class="btn btn-light mr-2"
