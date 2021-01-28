@@ -2,7 +2,9 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        {{visibleCount}} of {{allCount}} recipes selected
+      </div>
+      <div class="col text-center">
+        {{visibleCount}} of {{allCount}} recipes
       </div>
     </div>
     <div class="row bg-light pt-1 pb-3 mt-3 custom-overflow">
