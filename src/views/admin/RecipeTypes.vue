@@ -30,7 +30,9 @@ export default {
       }
     ).then( res => {
       if (res.status == 200) {
-        this.typeList = res.data;
+        this.typeList = res.data.sort( (a,b) => {
+          return (a[1] > b[1]) ? 1 : -1;
+        });
       }
     });
   },

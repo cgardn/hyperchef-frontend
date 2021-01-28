@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <div class="row bg-light pt-1 pb-3 my-3">
+    <div class="row">
+      <div class="col">
+        {{visibleCount}} of {{allCount}} recipes selected
+      </div>
+    </div>
+    <div class="row bg-light pt-1 pb-3 mt-3 custom-overflow">
       <div class="col-md-6 mb-3">
         <h4>Meals</h4>
         <ToggleButton
@@ -40,7 +45,7 @@ export default {
   components: {
     ToggleButton,
   },
-  props: ["filterList"],
+  props: ["filterList", "visibleCount", "allCount"],
   computed: {
     recipeTypes: function() {
       return Object.fromEntries(Object.entries(this.filterList).filter(
@@ -93,6 +98,10 @@ export default {
 </script>
 
 <style scoped>
+.custom-overflow {
+  height: 74vh;
+  overflow-y: scroll;
+}
 h4 {
   text-transform: capitalize;
 }

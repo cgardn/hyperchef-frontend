@@ -12,7 +12,7 @@
     <div class="row my-3 d-flex justify-space-evenly" align="center">
 
       <div class="col" align="right">
-        <button @click="toggleFilterPanel()">
+        <button class="btn bg-light" @click="toggleFilterPanel()">
           <span v-if="isFilterPanelVisible">
             Hide Filters
           </span>
@@ -22,7 +22,7 @@
         </button>
       </div>
       <div class="col" align="left">
-        <button @click="clearSelectedFilters">Clear Filters</button>
+        <button class="btn bg-light" @click="clearSelectedFilters">Clear Filters</button>
       </div>
 
     </div>
@@ -31,27 +31,20 @@
     <div class="row" v-if="isFilterPanelVisible">
       <FilterPanel
         :filterList="all_filters"
+        :visibleCount="visibleRecipes.length"
+        :allCount="Object.keys(all_recipes).length"
         @toggleBtn="toggleFilter"
         @clearBtn="clearSelectedFilters"
         ></FilterPanel>
     </div>
-    
-    <div class="row" align="center" v-if="isFilterPanelVisible">
-      <div class="col" align="right">
-        <button @click="toggleFilterPanel()">
-          <span v-if="isFilterPanelVisible">
-            Hide Filters
-          </span>
-        </button>
-      </div>
-      <div class="col" align="left">
-        <button @click="clearSelectedFilters">Clear Filters</button>
-      </div>
-    </div>
 
     <!-- recipe list -->
-    <div class="row">
-      <div class="col-2 mt-5 mx-auto text-light" align="center" v-if="loadingRecipesSpinner">
+    <div class="row" v-if="!isFilterPanelVisible">
+      <div 
+        v-if="loadingRecipesSpinner"
+        class="col-2 mt-5 mx-auto text-light"
+        align="center"
+      >
         <h2>Loading...</h2>
       </div>
       <PaginatedResults
@@ -77,7 +70,7 @@ export default {
     return {
       all_filters: {},
       all_recipes: {},
-      sorted_recipes: {},
+      sorted_recipe_ids: {},
       selectedFilters: [],
       visibleRecipes: [],
       query: "",
@@ -108,7 +101,7 @@ export default {
       // for each selected filter, perform a series of intersections to get
       //   to the final set of selected recipes
       this.selectedFilters.forEach(tag => {
-        out = this.intersectArrays(out, this.sorted_recipes[tag])
+        out = this.intersectArrays(out, this.sorted_recipe_ids[tag])
       })
       this.visibleRecipes = out.map(id => this.all_recipes[id])
     },
@@ -145,7 +138,7 @@ export default {
       let data = JSON.parse(localStorage.getItem("recipeGraph"));
       this.all_recipes = data.all_recipes;
       this.all_filters = data.all_filters;
-      this.sorted_recipes = data.sorted_recipe_ids;
+      this.sorted_recipe_ids = data.sorted_recipe_ids;
       this.visibleRecipes = Object.keys(this.all_recipes).map(id => this.all_recipes[id]);
     },
   },

@@ -7,15 +7,17 @@
         v-for="(ingredient, idx) in ingredients"
         :key="idx"
       >
-        <div class="col-8">{{ingredient.name}}</div>
+        <div class="col-8">{{ingredient[1]}}</div>
         <div class="col" v-if="isMetric">
-          {{ingredient.units.metric_show[0]*servingSize}} 
-          {{ingredient.units.metric_show[1]}}
+          {{ingredient[2]*servingSize}}
+          {{ingredient[3]}}
         </div>
+        <!-- hidden until conversion map implemented
         <div class="col" v-else>
           {{ingredient.units.imperial_show[0]*servingSize}}
           {{ingredient.units.imperial_show[1]}}
         </div>
+        -->
       </div>
           
       <div class="row mt-2">
@@ -37,7 +39,7 @@
           </button>
         </div>
 
-        <!-- units -->
+        <!-- TODO units button hidden until conversion map implemented  
         <div class="col" align=right width="100%">
           <button 
             class="btn btn-secondary"
@@ -45,6 +47,7 @@
             <span>Units</span>
           </button>
         </div>
+        -->
       </div>
     </div>
   </div>

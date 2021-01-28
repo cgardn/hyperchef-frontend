@@ -9,9 +9,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "./styles/custom-bootstrap";
 body {
-  background: linear-gradient(180deg, #020024 0%, #0a0a8b 8%, #00d4ff 100%) no-repeat fixed;
-  height: 100%;
+  background: $theme-bg;
 }
 </style>
