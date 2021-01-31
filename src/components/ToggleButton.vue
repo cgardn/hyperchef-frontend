@@ -1,7 +1,7 @@
 <template>
   <button 
     type="button" 
-    class="border mb-2 mx-1 toggleButton"
+    class="border-0 br-pill mb-2 mx-1 toggleButton"
     :class="{'btn-info': active, 'btn-outline-info': !active}"
     @click="toggleClick"
     >
@@ -22,6 +22,9 @@ export default {
 </script>
 
 <style scoped>
+.br-pill {
+  border-radius: 15px;
+}
 .btn-outline-info:hover {
   background-color: #fff;
   color: #17a2b8;

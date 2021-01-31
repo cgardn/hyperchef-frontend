@@ -7,22 +7,20 @@
         {{visibleCount}} of {{allCount}} recipes
       </div>
     </div>
-    <div class="row pt-1 pb-3 mt-3">
-      <div class="col-8 offset-2 bg-light custom-overflow">
-        <div 
-          class="col-12 text-center"
-          v-for="(itag, idx) in Object.keys(itags)"
-          :key="idx"
-        >
-          <IngredientTagDropdown :title="itag" :count="countSelected(itag)">
-            <ToggleButton
-              v-for="(filter, idy) in itags[itag]"
-              :key="idy"
-              :active="tags[filter].state"
-              @click="emitToggle(filter)"
-              >{{filter}}</ToggleButton>
-          </IngredientTagDropdown>
-        </div>
+    <div class="row pt-0 pb-3 mt-3 px-0 bg-light">
+      <div 
+        class="col-12 col-md-4"
+        v-for="(itag, idx) in Object.keys(itags)"
+        :key="idx"
+      >
+        <IngredientTagDropdown :title="itag" :count="countSelected(itag)">
+          <ToggleButton
+            v-for="(filter, idy) in itags[itag]"
+            :key="idy"
+            :active="tags[filter].state"
+            @click="emitToggle(filter)"
+            >{{filter}}</ToggleButton>
+        </IngredientTagDropdown>
       </div>
     </div>
   </div>
@@ -58,7 +56,6 @@ export default {
     //  the buttons is received as a prop
     
     Object.entries(this.filterList).forEach(ing => {
-      // NEW
       // merge in recipeTypes as an itag named "meals," and then remove the 
       //  one-off dropdown called 'meals' and it should all Just Work.
       // then: should be able to count active filters generically for each iTag
