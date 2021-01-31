@@ -11,18 +11,23 @@
     <!-- load recipes + filter buttons -->
     <div class="row my-3 d-flex justify-space-evenly" align="center">
 
-      <div class="col" align="right">
-        <button class="btn bg-light" @click="toggleFilterPanel()">
-          <span v-if="isFilterPanelVisible">
-            Hide Filters
-          </span>
-          <span v-else>
-            Show Filters
-          </span>
+      <div class="col-6" align="right">
+        <button
+          class="btn"
+          :class="{
+            'btn-info': isFilterPanelVisible, 
+            'btn-light': !isFilterPanelVisible,
+          }"
+          @click="toggleFilterPanel()"
+        >
+          <span>Pick Ingredients</span>
         </button>
       </div>
-      <div class="col" align="left">
-        <button class="btn bg-light" @click="clearSelectedFilters">Clear Filters</button>
+      <div class="col" align="left" v-if="selectedFilters.length > 0">
+        <button class="btn bg-light" @click="clearSelectedFilters">
+          <span>{{selectedFilters.length}} filters selected</span>
+          <span class="cancelIcon pl-2">&#10006;</span>
+        </button>
       </div>
 
     </div>
@@ -149,6 +154,9 @@ export default {
 </script>
 
 <style scoped>
+.cancelIcon {
+  color: red;
+}
 img {
 }
 form {
