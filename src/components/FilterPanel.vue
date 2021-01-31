@@ -7,28 +7,33 @@
         {{visibleCount}} of {{allCount}} recipes
       </div>
     </div>
-    <div class="row bg-light pt-1 pb-3 mt-3 custom-overflow">
-      <div class="col-md-6 mb-3">
-        <h4>Meals</h4>
-        <ToggleButton
-          v-for="(filter, idx) in Object.keys(recipeTypes)"
-          :key="idx"
-          :active="recipeTypes[filter].state"
-          @click="emitToggle(filter)"
-          >{{filter}}</ToggleButton>
+    <div class="row pt-1 pb-3 mt-3">
+      <div class="col-8 offset-2 bg-light custom-overflow">
+      <div class="col-12 text-center">
+        <IngredientTagDropdown title="Meals">
+          <ToggleButton
+            v-for="(filter, idx) in Object.keys(recipeTypes)"
+            :key="idx"
+            class="fade-item"
+            :active="recipeTypes[filter].state"
+            @click="emitToggle(filter)"
+            >{{filter}}</ToggleButton>
+        </IngredientTagDropdown>
       </div>
       <div 
-        class="col-md-6 mb-3"
+        class="col-12 text-center"
         v-for="(itag, idx) in Object.keys(itags)"
         :key="idx"
       >
-      <h4>{{itag}}</h4>
+      <IngredientTagDropdown :title="itag">
         <ToggleButton
           v-for="(filter, idy) in itags[itag]"
           :key="idy"
           :active="ingredients[filter].state"
           @click="emitToggle(filter)"
           >{{filter}}</ToggleButton>
+      </IngredientTagDropdown>
+      </div>
       </div>
     </div>
   </div>
@@ -36,6 +41,7 @@
 
 <script>
 import ToggleButton from '@/components/ToggleButton'
+import IngredientTagDropdown from '@/components/IngredientTagDropdown'
 
 export default {
   name: "FilterPanel",
@@ -46,6 +52,7 @@ export default {
   },
   components: {
     ToggleButton,
+    IngredientTagDropdown,
   },
   props: ["filterList", "visibleCount", "allCount"],
   computed: {
@@ -101,7 +108,6 @@ export default {
 
 <style scoped>
 .custom-overflow {
-  height: 74vh;
   overflow-y: scroll;
 }
 h4 {
