@@ -32,9 +32,10 @@
         :recipeBatch="visibleRecipes"
         :recipeCount="Object.keys(all_recipes).length"
       >
+      <!-- filterbutton slot for layout reasons -->
         <template v-slot:filterButtons>
-          <!-- filter buttons -->
           <div>
+            <!-- filter open/close button -->
             <button
               class="btn btn-height"
               :class="{
@@ -44,10 +45,17 @@
               @click="toggleFilterPanel()"
             >
               <img src="../assets/filter_alt-24px.svg">
+              <span
+                class="filterBadge"
+                v-if="selectedFilters.length > 0"
+              >
+               {{selectedFilters.length}}</span>
             </button>
+
+            <!-- clear filters button -->
             <button
               v-if="selectedFilters.length > 0 && isFilterPanelVisible"
-              class="btn bg-light btn-height ml-2"
+              class="btn bg-light btn-height ml-4"
               @click="clearSelectedFilters">
               <span>Clear {{selectedFilters.length}} filters</span>
             </button>
@@ -160,6 +168,15 @@ export default {
 </script>
 
 <style scoped>
+.filterBadge {
+  position: absolute;
+  top: -10px;
+  left: 53px;
+  padding: 1px 8px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
 .btn-height {
   height: 45px;
 }
