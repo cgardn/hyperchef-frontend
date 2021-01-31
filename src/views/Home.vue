@@ -8,43 +8,10 @@
       </div>
     </div>
 
-    <!-- load recipes + filter buttons -->
-    <div class="row my-3 d-flex justify-space-evenly" align="center">
 
-      <div class="col-6" align="right">
-        <button
-          class="btn"
-          :class="{
-            'btn-info': isFilterPanelVisible, 
-            'btn-light': !isFilterPanelVisible,
-          }"
-          @click="toggleFilterPanel()"
-        >
-          <span>Pick Ingredients</span>
-        </button>
-      </div>
-      <div class="col" align="left" v-if="selectedFilters.length > 0">
-        <button class="btn bg-light" @click="clearSelectedFilters">
-          <span>{{selectedFilters.length}} filters selected</span>
-          <span class="cancelIcon pl-2">&#10006;</span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- filter panel -->
-    <div class="row" v-if="isFilterPanelVisible">
-      <FilterPanel
-        :filterList="all_filters"
-        :visibleCount="visibleRecipes.length"
-        :allCount="Object.keys(all_recipes).length"
-        @toggleBtn="toggleFilter"
-        @clearBtn="clearSelectedFilters"
-        ></FilterPanel>
-    </div>
 
     <!-- recipe list -->
-    <div class="row" v-if="!isFilterPanelVisible">
+    <div class="row">
       <div 
         v-if="loadingRecipesSpinner"
         class="col-2 mt-5 mx-auto text-light"
@@ -54,9 +21,46 @@
       </div>
       <PaginatedResults
         v-else
+        :isFiltersVisible="isFilterPanelVisible"
         :recipeBatch="visibleRecipes"
         :recipeCount="Object.keys(all_recipes).length"
-      ></PaginatedResults>
+      >
+        <template v-slot:filterButtons>
+          <!-- filter buttons -->
+          <div class="row mt-3 d-flex justify-space-evenly" align="center">
+            <div class="col-4" align="right">
+              <button
+                class="btn"
+                :class="{
+                  'btn-info': isFilterPanelVisible, 
+                  'btn-light': !isFilterPanelVisible,
+                }"
+                @click="toggleFilterPanel()"
+              >
+                <span>Pick Ingredients</span>
+              </button>
+            </div>
+            <div class="col" align="left" v-if="selectedFilters.length > 0">
+              <button class="btn bg-light" @click="clearSelectedFilters">
+                <span>{{selectedFilters.length}} filters selected</span>
+                <span class="cancelIcon pl-2">&#10006;</span>
+              </button>
+            </div>
+          </div>
+        </template>
+        <template v-slot:filterPanel>
+          <!-- filter panel -->
+          <div class="row" v-if="isFilterPanelVisible">
+            <FilterPanel
+              :filterList="all_filters"
+              :visibleCount="visibleRecipes.length"
+              :allCount="Object.keys(all_recipes).length"
+              @toggleBtn="toggleFilter"
+              @clearBtn="clearSelectedFilters"
+              ></FilterPanel>
+          </div>
+        </template>
+      </PaginatedResults>
     </div>
   </div>
 </template>

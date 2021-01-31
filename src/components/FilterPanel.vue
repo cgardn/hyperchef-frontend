@@ -1,12 +1,5 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-      </div>
-      <div class="col text-center">
-        {{visibleCount}} of {{allCount}} recipes
-      </div>
-    </div>
     <div class="row pt-0 pb-3 mt-3 px-0 bg-light">
       <div 
         class="col-12 col-md-4"

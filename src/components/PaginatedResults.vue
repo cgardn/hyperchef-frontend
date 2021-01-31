@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div class="row mb-3">
-      <div class="col mt-auto text-light text-center">
+      <div class="col offset-1">
+        <slot name="filterButtons"></slot>
+      </div>
+      <div class="col mt-auto text-light text-right">
         <button
           type="button"
           class="btn btn-light mr-2"
@@ -15,12 +18,13 @@
           @click="nextPage"
           :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
           >&#8594;</button>
-      </div>
-      <div class="col mt-auto mr-auto text-center">
-        {{this.recipeBatch.length}} of {{this.recipeCount}} recipes
+        <span class="text-dark ml-5">
+          {{this.recipeBatch.length}} of {{this.recipeCount}} recipes
+        </span>
       </div>
     </div>
-    <div class="row custom-overflow">
+    <slot name="filterPanel" v-if="isFiltersVisible"></slot>
+    <div class="row custom-overflow" v-else>
       <div
         class="col mb-4"
         align="center"
@@ -41,7 +45,7 @@ export default {
   components: {
     RecipeItem,
   },
-  props: ["recipeBatch", "recipeCount"],
+  props: ["recipeBatch", "recipeCount", "isFiltersVisible"],
   data: function() {
     return {
       resultsPerPage: 25,
