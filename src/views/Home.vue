@@ -8,6 +8,13 @@
       </div>
     </div>
 
+    <!-- subheader -->
+    <div class="row my-3">
+      <div class="col text-center">
+        <h2>Level up your cooking</h2>
+      </div>
+    </div>
+
 
 
     <!-- recipe list -->
@@ -27,38 +34,33 @@
       >
         <template v-slot:filterButtons>
           <!-- filter buttons -->
-          <div class="row mt-3 d-flex justify-space-evenly" align="center">
-            <div class="col-4" align="right">
-              <button
-                class="btn"
-                :class="{
-                  'btn-info': isFilterPanelVisible, 
-                  'btn-light': !isFilterPanelVisible,
-                }"
-                @click="toggleFilterPanel()"
-              >
-                <span>Pick Ingredients</span>
-              </button>
-            </div>
-            <div class="col" align="left" v-if="selectedFilters.length > 0">
-              <button class="btn bg-light" @click="clearSelectedFilters">
-                <span>{{selectedFilters.length}} filters selected</span>
-                <span class="cancelIcon pl-2">&#10006;</span>
-              </button>
-            </div>
+          <div>
+            <button
+              class="btn btn-height"
+              :class="{
+                'btn-info': isFilterPanelVisible, 
+                'btn-light': !isFilterPanelVisible,
+              }"
+              @click="toggleFilterPanel()"
+            >
+              <img src="../assets/filter_alt-24px.svg">
+            </button>
+            <button
+              v-if="selectedFilters.length > 0 && isFilterPanelVisible"
+              class="btn bg-light btn-height ml-2"
+              @click="clearSelectedFilters">
+              <span>Clear {{selectedFilters.length}} filters</span>
+            </button>
           </div>
         </template>
         <template v-slot:filterPanel>
-          <!-- filter panel -->
-          <div class="row" v-if="isFilterPanelVisible">
-            <FilterPanel
-              :filterList="all_filters"
-              :visibleCount="visibleRecipes.length"
-              :allCount="Object.keys(all_recipes).length"
-              @toggleBtn="toggleFilter"
-              @clearBtn="clearSelectedFilters"
-              ></FilterPanel>
-          </div>
+          <FilterPanel
+            :filterList="all_filters"
+            :visibleCount="visibleRecipes.length"
+            :allCount="Object.keys(all_recipes).length"
+            @toggleBtn="toggleFilter"
+            @clearBtn="clearSelectedFilters"
+            ></FilterPanel>
         </template>
       </PaginatedResults>
     </div>
@@ -158,6 +160,12 @@ export default {
 </script>
 
 <style scoped>
+.btn-height {
+  height: 45px;
+}
+.filterButton {
+  font-size: 2em;
+}
 .cancelIcon {
   color: red;
 }
