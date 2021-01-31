@@ -1,7 +1,7 @@
 <template>
   <button 
     type="button" 
-    class="btn"
+    class="border mb-2 mx-1 toggleButton"
     :class="{'btn-info': active, 'btn-outline-info': !active}"
     @click="toggleClick"
     >

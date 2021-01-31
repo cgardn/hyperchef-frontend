@@ -1,6 +1,9 @@
 <template>
   <div @click="toggleDropdown">
-    <h4 class="parent border py-2">{{capitalizedTitle}}</h4>
+    <h4 class="parent border py-2">
+      {{capitalizedTitle}}
+      <span v-if="count > 0">{{count}} selected</span>
+    </h4>
     <div class="child" v-if="isDropped" @click.stop>
         <slot class="fade-item"></slot>
     </div>
@@ -15,7 +18,7 @@ export default {
       return this.title[0].toUpperCase() + this.title.slice(1,)
     },
   },
-  props: ['title', 'tagList'],
+  props: ['title', 'count'],
   data: function() {
     return {
       isDropped: false,
