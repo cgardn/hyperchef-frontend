@@ -1,26 +1,37 @@
 <template>
   <div class="container">
     <div class="row mb-3">
-      <div class="col mt-auto text-light text-center">
+      <div :class="{'col-8' : isFiltersVisible, 'col-2' : !isFiltersVisible}">
+        <slot name="filterButtons"></slot>
+      </div>
+      <div class="col my-auto text-light text-right">
         <button
+          v-if="!isFiltersVisible"
           type="button"
-          class="btn btn-light mr-2"
+          class="btn btn-light mr-0"
           @click="prevPage"
           :disabled="this.pageEnd/this.resultsPerPage <= 1"
           >&#8592;</button>
-        <span>{{this.currentPage}} of {{this.pageCount}}</span>
+        <span v-if="!isFiltersVisible">
+          {{this.currentPage}} of {{this.pageCount}}
+        </span>
         <button
+          v-if="!isFiltersVisible"
           type="button"
-          class="btn btn-light ml-2"
+          class="btn btn-light ml-0"
           @click="nextPage"
           :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
           >&#8594;</button>
-      </div>
-      <div class="col mt-auto mr-auto text-center">
-        {{this.recipeBatch.length}} of {{this.recipeCount}} recipes
+        <span
+          class="text-dark"
+          :class="{topFix : !isFiltersVisible}"
+        >
+          {{this.recipeBatch.length}} results
+        </span>
       </div>
     </div>
-    <div class="row custom-overflow">
+    <slot name="filterPanel" v-if="isFiltersVisible"></slot>
+    <div class="row custom-overflow" v-else>
       <div
         class="col mb-4"
         align="center"
@@ -41,7 +52,7 @@ export default {
   components: {
     RecipeItem,
   },
-  props: ["recipeBatch", "recipeCount"],
+  props: ["recipeBatch", "recipeCount", "isFiltersVisible"],
   data: function() {
     return {
       resultsPerPage: 25,
@@ -89,6 +100,10 @@ export default {
 </script>
 
 <style scoped>
+.topFix {
+  position: relative;
+  top: 2px;
+}
 .custom-overflow {
   height: 70vh;
   overflow-y: scroll;

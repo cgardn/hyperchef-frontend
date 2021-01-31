@@ -1,34 +1,19 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-      </div>
-      <div class="col text-center">
-        {{visibleCount}} of {{allCount}} recipes
-      </div>
-    </div>
-    <div class="row bg-light pt-1 pb-3 mt-3 custom-overflow">
-      <div class="col-md-6 mb-3">
-        <h4>Meals</h4>
-        <ToggleButton
-          v-for="(filter, idx) in Object.keys(recipeTypes)"
-          :key="idx"
-          :active="recipeTypes[filter].state"
-          @click="emitToggle(filter)"
-          >{{filter}}</ToggleButton>
-      </div>
+    <div class="row pt-0 pb-3 mt-3 px-0 bg-light">
       <div 
-        class="col-md-6 mb-3"
+        class="col-12 col-md-4"
         v-for="(itag, idx) in Object.keys(itags)"
         :key="idx"
       >
-      <h4>{{itag}}</h4>
-        <ToggleButton
-          v-for="(filter, idy) in itags[itag]"
-          :key="idy"
-          :active="ingredients[filter].state"
-          @click="emitToggle(filter)"
-          >{{filter}}</ToggleButton>
+        <IngredientTagDropdown :title="itag" :count="countSelected(itag)">
+          <ToggleButton
+            v-for="(filter, idy) in itags[itag]"
+            :key="idy"
+            :active="tags[filter].state"
+            @click="emitToggle(filter)"
+            >{{filter}}</ToggleButton>
+        </IngredientTagDropdown>
       </div>
     </div>
   </div>
@@ -36,6 +21,7 @@
 
 <script>
 import ToggleButton from '@/components/ToggleButton'
+import IngredientTagDropdown from '@/components/IngredientTagDropdown'
 
 export default {
   name: "FilterPanel",
@@ -46,18 +32,12 @@ export default {
   },
   components: {
     ToggleButton,
+    IngredientTagDropdown,
   },
   props: ["filterList", "visibleCount", "allCount"],
   computed: {
-    recipeTypes: function() {
-      return Object.fromEntries(Object.entries(this.filterList).filter(
-        i => i[1].type == "recipeType")
-      )
-    },
-    ingredients: function() {
-      return Object.fromEntries(Object.entries(this.filterList).filter(
-        i => !i[1].type)
-      )
+    tags: function() {
+      return this.filterList;
     },
   },
   created: function() {
@@ -69,6 +49,11 @@ export default {
     //  the buttons is received as a prop
     
     Object.entries(this.filterList).forEach(ing => {
+      // merge in recipeTypes as an itag named "meals," and then remove the 
+      //  one-off dropdown called 'meals' and it should all Just Work.
+      // then: should be able to count active filters generically for each iTag
+
+
       // ing[0] is String: name of ingredient
       // ing[1] is Object: {itags: Array of String tag names
       //                    state: Bool filter toggle state}
@@ -79,19 +64,33 @@ export default {
       // add the ingredient to each itag list on this.itags, for each on that
       //   ingredients own list of applied tags
 
-      // skip recipe types, they don't have lists of ingredients
-      if (ing[1].type && ing[1].type == 'recipeType')
-        return
-      // create array on this.itags if it doesn't exist yet
-      ing[1].itags.forEach(iTag => {
-        if (!this.itags[iTag])
-          this.itags[iTag] = [ing[0]]
+      // recipeTypes have no list of ingredients, must be handled separately
+      if (ing[1].type && ing[1].type == 'recipeType') {
+        if (!this.itags['meals'])
+          this.itags['meals'] = [ing[0]]
         else
-          this.itags[iTag].push(ing[0])
-      });
+          this.itags['meals'].push(ing[0])
+      } else {
+        // create array of iTags on this.itags if it doesn't exist yet
+        ing[1].itags.forEach(iTag => {
+          if (!this.itags[iTag])
+            this.itags[iTag] = [ing[0]]
+          else
+            this.itags[iTag].push(ing[0])
+        });
+      }
     });
   },
   methods: {
+    countSelected: function(itag) {
+      let count = 0;
+      for (let i = 0; i < this.itags[itag].length; i++) {
+        if (this.tags[this.itags[itag][i]].state == true) {
+          count += 1;
+        }
+      }
+      return count;
+    },
     emitToggle: function(name) {
       this.$emit('toggleBtn', name);
     },
@@ -101,7 +100,6 @@ export default {
 
 <style scoped>
 .custom-overflow {
-  height: 74vh;
   overflow-y: scroll;
 }
 h4 {

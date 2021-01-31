@@ -8,38 +8,17 @@
       </div>
     </div>
 
-    <!-- load recipes + filter buttons -->
-    <div class="row my-3 d-flex justify-space-evenly" align="center">
-
-      <div class="col" align="right">
-        <button class="btn bg-light" @click="toggleFilterPanel()">
-          <span v-if="isFilterPanelVisible">
-            Hide Filters
-          </span>
-          <span v-else>
-            Show Filters
-          </span>
-        </button>
+    <!-- subheader -->
+    <div class="row my-3">
+      <div class="col text-center">
+        <h2>Level up your cooking</h2>
       </div>
-      <div class="col" align="left">
-        <button class="btn bg-light" @click="clearSelectedFilters">Clear Filters</button>
-      </div>
-
     </div>
 
-    <!-- filter panel -->
-    <div class="row" v-if="isFilterPanelVisible">
-      <FilterPanel
-        :filterList="all_filters"
-        :visibleCount="visibleRecipes.length"
-        :allCount="Object.keys(all_recipes).length"
-        @toggleBtn="toggleFilter"
-        @clearBtn="clearSelectedFilters"
-        ></FilterPanel>
-    </div>
+
 
     <!-- recipe list -->
-    <div class="row" v-if="!isFilterPanelVisible">
+    <div class="row">
       <div 
         v-if="loadingRecipesSpinner"
         class="col-2 mt-5 mx-auto text-light"
@@ -49,9 +28,49 @@
       </div>
       <PaginatedResults
         v-else
+        :isFiltersVisible="isFilterPanelVisible"
         :recipeBatch="visibleRecipes"
         :recipeCount="Object.keys(all_recipes).length"
-      ></PaginatedResults>
+      >
+      <!-- filterbutton slot for layout reasons -->
+        <template v-slot:filterButtons>
+          <div>
+            <!-- filter open/close button -->
+            <button
+              class="btn btn-height"
+              :class="{
+                'btn-info': isFilterPanelVisible, 
+                'btn-light': !isFilterPanelVisible,
+              }"
+              @click="toggleFilterPanel()"
+            >
+              <img src="../assets/filter_alt-24px.svg">
+              <span
+                class="filterBadge"
+                v-if="selectedFilters.length > 0"
+              >
+               {{selectedFilters.length}}</span>
+            </button>
+
+            <!-- clear filters button -->
+            <button
+              v-if="selectedFilters.length > 0 && isFilterPanelVisible"
+              class="btn bg-light btn-height ml-4"
+              @click="clearSelectedFilters">
+              <span>Clear {{selectedFilters.length}} filters</span>
+            </button>
+          </div>
+        </template>
+        <template v-slot:filterPanel>
+          <FilterPanel
+            :filterList="all_filters"
+            :visibleCount="visibleRecipes.length"
+            :allCount="Object.keys(all_recipes).length"
+            @toggleBtn="toggleFilter"
+            @clearBtn="clearSelectedFilters"
+            ></FilterPanel>
+        </template>
+      </PaginatedResults>
     </div>
   </div>
 </template>
@@ -149,6 +168,24 @@ export default {
 </script>
 
 <style scoped>
+.filterBadge {
+  position: absolute;
+  top: -10px;
+  left: 53px;
+  padding: 1px 8px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+.btn-height {
+  height: 45px;
+}
+.filterButton {
+  font-size: 2em;
+}
+.cancelIcon {
+  color: red;
+}
 img {
 }
 form {
