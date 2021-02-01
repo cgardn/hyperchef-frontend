@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h2 class="mx-auto my-5" align="center">{{recipe.name}}</h2>
-    <div class="row d-flex justify-content-center">
-      <div class="col-12 col-md mx-auto">
+    <div class="row d-flex justify-content-center mb-2">
+      <div class="col-12 col-md mx-auto h-100 d-inline-block">
         <div class="container mb-2">
         <div class="card bg-grey px-2 py-2">
           <h4>Equipment you'll need</h4>
@@ -19,13 +19,13 @@
         </div>
       </div>
 
-      <div class="col-12 col-md mx-auto">
+      <div class="col-12 col-md mx-auto h-100">
         <IngredientList :ingredients="ingredients"></IngredientList>
       </div>
     </div>
 
 
-    <div class="row bg-light py-3">
+    <div class="row bg-light py-3 mb-2">
       <div class="col-12">
         <h4>Steps:</h4>
       </div>
@@ -36,15 +36,6 @@
         <b>{{Number(idx)+1}}. {{step[0]}}</b>
         <br />
         <span>{{step[1]}}</span>
-      </div>
-    </div>
-    <div class="row mt-1 mb-2 py-1">
-      <div class="col-2">
-        <div class="card bg-grey">
-          <h6 class="text-center my-1">
-            <a :href="recipe.origin">Source</a>
-          </h6>
-        </div>
       </div>
     </div>
   </div>
