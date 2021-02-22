@@ -1,6 +1,6 @@
 {
   "name": "hyperchef-frontend",
-  "version": "0.1.0",
+  "version": "alpha-1.3.0b",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
