@@ -1,24 +1,9 @@
-# hyperchef-frontend
+# Hyperchef frontend
 
-## Project setup
-```
-yarn install
-```
+Hyperchef is a recipe website I built after getting tired of slogging through endless ads and prose on most other recipe sites. It's also a place for me to store all our favorite recipes instead of in a binder on top of the refrigerator!
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Upcoming features include:
+- weekly meal planning
+- grocery list generation
+- many more recipes
+- user accounts for saving favorite recipes (right now all the recipes are already my favorites :))
