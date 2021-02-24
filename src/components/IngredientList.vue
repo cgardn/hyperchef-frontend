@@ -66,10 +66,10 @@ export default {
   methods: {
     toggleUnits: function() {
       this.isMetric = !this.isMetric;
-
     },
     changeServings: function(amt) {
       this.servingSize += amt;
+      this.$emit("changeServings", this.servingSize);
     },
   },
 }

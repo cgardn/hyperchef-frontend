@@ -6,6 +6,9 @@
 
 export default {
   name: "App",
+  mounted: function() {
+    this.$state.recoverGrocery();
+  },
 }
 </script>
 

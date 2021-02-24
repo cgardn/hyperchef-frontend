@@ -3,7 +3,7 @@
     <h2 class="mx-auto my-5" align="center">{{recipe.name}}</h2>
     <div class="row mb-3">
       <div class="col">
-        <button class="btn btn-light">
+        <button @click="toggleGrocery" class="btn btn-light">
           <img src="../assets/baseline_receipt_long_black_18dp.png">
           <img src="../assets/add-24px.svg">
         </button>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="col-12 col-md mx-auto">
-        <IngredientList :ingredients="ingredients"></IngredientList>
+        <IngredientList @changeServings="updateServings" :ingredients="ingredients"></IngredientList>
       </div>
     </div>
 
@@ -63,7 +63,19 @@ export default {
       recipe: {},
       equipment: [],
       ingredients: [],
+      isGrocery: false,
+      servings: 1,
     }
+  },
+  methods: {
+    updateServings: function(n) {
+      console.log(n);
+      this.servings = n;
+    },
+    toggleGrocery: function() {
+      this.$state.toggleGroceryRecipe(this.recipe, this.servings);
+      this.isGrocery = this.$state.groceryHasRecipe(this.recipe.id);
+    },
   },
   mounted: async function() {
     this.$axios({
@@ -76,6 +88,7 @@ export default {
         this.equipment = res.data['equipment'];
       }
     })
+    this.isGrocery = this.$state.groceryHasRecipe(this.recipe.id);
   },
 }
 </script>
