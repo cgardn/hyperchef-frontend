@@ -4,6 +4,7 @@
       <div :class="{'col-8' : isFiltersVisible, 'col-2' : !isFiltersVisible}">
         <slot name="filterButtons"></slot>
       </div>
+      <slot name="groceryListButton"></slot>
       <div class="col my-auto text-light text-right">
         <button
           v-if="!isFiltersVisible"
@@ -30,7 +31,8 @@
         </span>
       </div>
     </div>
-    <slot name="filterPanel" v-if="isFiltersVisible"></slot>
+    <slot name="groceryList" v-if="isGroceryListVisible"></slot>
+    <slot name="filterPanel" v-else-if="isFiltersVisible"></slot>
     <div class="row custom-overflow" v-else>
       <div
         class="col mb-4"
@@ -52,7 +54,12 @@ export default {
   components: {
     RecipeItem,
   },
-  props: ["recipeBatch", "recipeCount", "isFiltersVisible"],
+  props: [
+    "recipeBatch",
+    "recipeCount",
+    "isFiltersVisible",
+    "isGroceryListVisible"
+  ],
   data: function() {
     return {
       resultsPerPage: 25,
