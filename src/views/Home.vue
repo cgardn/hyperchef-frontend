@@ -60,8 +60,9 @@
             </button>
           </div>
         </template>
+
         <template v-slot:groceryListButton>
-          <div v-if="!isFilterPanelVisible" class="col-1">
+          <div v-if="!isFilterPanelVisible" class="col-4">
             <button
               class="btn btn-height"
               :class="{
@@ -77,6 +78,7 @@
         <template v-slot:groceryList>
           <GroceryList></GroceryList>
         </template>
+
         <template v-slot:filterPanel>
           <FilterPanel
             :filterList="all_filters"

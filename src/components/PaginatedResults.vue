@@ -5,7 +5,7 @@
         <slot name="filterButtons"></slot>
       </div>
       <slot name="groceryListButton"></slot>
-      <div class="col my-auto text-light text-right">
+      <div class="col my-auto text-light text-right" v-if="!isFiltersVisible && !isGroceryListVisible">
         <button
           v-if="!isFiltersVisible"
           type="button"
@@ -13,7 +13,7 @@
           @click="prevPage"
           :disabled="this.pageEnd/this.resultsPerPage <= 1"
           >&#8592;</button>
-        <span v-if="!isFiltersVisible">
+        <span v-if="!isFiltersVisible" class="text-dark">
           {{this.currentPage}} of {{this.pageCount}}
         </span>
         <button
@@ -23,11 +23,10 @@
           @click="nextPage"
           :disabled="this.pageEnd/this.resultsPerPage >= this.pageCount"
           >&#8594;</button>
-        <span
-          class="text-dark"
-          :class="{topFix : !isFiltersVisible}"
-        >
-          {{this.recipeBatch.length}} results
+      </div>
+      <div class="col my-auto" v-if="isFiltersVisible">
+        <span class="text-dark">
+          {{this.recipeBatch.length}} recipes
         </span>
       </div>
     </div>

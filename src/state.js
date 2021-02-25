@@ -6,28 +6,47 @@ const state = {
   setGroceryList: function(newList) {
     localStorage.setItem('groceryList', JSON.stringify(newList))
   },
-  toggleGroceryRecipe: function(recipe, servings) {
-    // adds recipe if it's not already there, otherwise removes it
+  addRecipeGrocery: function(recipe, servings) {
     const curList = JSON.parse(localStorage.getItem('groceryList'));
-
-    if (!curList.includes( (r) => {r.id === recipe.id})) {
-      const newList = curList.push({
-        name: recipe.name,
-        id: recipe.id,
-        servings: servings,
-      });
-      localStorage.setItem('groceryList', JSON.stringify(newList));
+    const newList = [...curList, {
+      name: recipe.name,
+      recipeId: recipe.id,
+      servings: servings,
+    }];
+    localStorage.setItem('groceryList', JSON.stringify(newList));
+  },
+  removeRecipeGrocery: function(id) {
+    const curList = JSON.parse(localStorage.getItem('groceryList'));
+    let newList = [];
+    curList.forEach( (r) => {
+      if (r.recipeId !== id) {newList.push(r)}
+    });
+    localStorage.setItem('groceryList', JSON.stringify(newList));
+  },
+  toggleGroceryRecipe: function(recipe, servings) {
+    if (!this.groceryHasRecipe(recipe.id)) {
+      this.addRecipeGrocery(recipe, servings);
     } else {
-      const newList = curList.filter( (r) => {r.id !== recipe.id});
-      localStorage.setItem('groceryList', JSON.stringify(newList));
+      this.removeRecipeGrocery(recipe.id);
     }
+  },
+  getRawShoppingList: function() {
+    return JSON.parse(localStorage.getItem('rawShoppingList')) || [];
+  },
+  setRawShoppingList: function(list) {
+    localStorage.setItem('rawShoppingList', JSON.stringify(list));
+  },
+  clearRawShoppingList: function() {
+    localStorage.setItem('rawShoppingList', JSON.stringify({}))
   },
   groceryHasRecipe: function(id) {
     // checks if grocery list contains a specified recipe by id
     const list = JSON.parse(localStorage.getItem('groceryList'))
-    return list.includes( (r) => {
-      r.id === id;
+    let any = false;
+    list.forEach( (r) => {
+      if (r.recipeId === id) {any = true}
     })
+    return any;
   },
   clearGrocery: function() {
     localStorage.setItem('groceryList', JSON.stringify([]));

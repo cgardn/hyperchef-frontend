@@ -3,9 +3,14 @@
     <h2 class="mx-auto my-5" align="center">{{recipe.name}}</h2>
     <div class="row mb-3">
       <div class="col">
-        <button @click="toggleGrocery" class="btn btn-light">
+        <button
+          @click="toggleGrocery"
+          class="btn btn-light no-border"
+          :class="{'onList' : isGrocery}"
+        >
           <img src="../assets/baseline_receipt_long_black_18dp.png">
-          <img src="../assets/add-24px.svg">
+          <img v-if="!isGrocery" src="../assets/add-24px.svg">
+          <img v-else src="../assets/done-24px.svg">
         </button>
       </div>
     </div>
@@ -63,13 +68,12 @@ export default {
       recipe: {},
       equipment: [],
       ingredients: [],
-      isGrocery: false,
       servings: 1,
+      isGrocery: false,
     }
   },
   methods: {
     updateServings: function(n) {
-      console.log(n);
       this.servings = n;
     },
     toggleGrocery: function() {
@@ -86,9 +90,18 @@ export default {
         this.recipe = res.data['recipe'];
         this.ingredients = res.data['ingredients'];
         this.equipment = res.data['equipment'];
+        this.isGrocery = this.$state.groceryHasRecipe(this.recipe.id);
       }
     })
-    this.isGrocery = this.$state.groceryHasRecipe(this.recipe.id);
   },
 }
 </script>
+
+<style scoped> 
+.no-border {
+  border: none;
+}
+.onList {
+  background: rgb(120,227,149);
+}
+</style>
