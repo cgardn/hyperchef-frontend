@@ -11,7 +11,7 @@
     -->
     <div class="row mb-2" v-for="(recipe, idx) in list" :key="idx">
       <div class="col-3 my-auto">
-        <a class="mr-5" :href="'/#/recipe/' + recipe.name">{{recipe.name}}</a>
+        <a class="btn btn-light w-100 mr-5" :href="'/#/recipe/' + recipe.name">{{recipe.name}}</a>
       </div>
       <div class="col my-auto">
         <span class="mr-2">Servings:</span>
@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="row"><div class="col"><hr /></div></div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col my-auto">
-        List of all ingredients
+        <h6>Shopping list</h6>
       </div>
       <div class="col my-auto text-left">
         <button
@@ -34,24 +34,25 @@
           @click="getIngredientList"
           :disabled="waitList"
         >
-          {{waitList ? "Generating..." : "Generate List"}}
+          {{waitList ? "Generating..." : "Refresh List"}}
         </button>
       </div>
     </div>
-    <div class="row" v-for="(ing, idx) in Object.keys(ingredientList)" :key="(idx+1)*10">
-      <div class="col">
-        {{ing}}
-      </div>
-      <div class="col">
-        {{ingredientList[ing][0]}} {{ingredientList[ing][1]}}
-      </div>
-    </div>
+    <IngredientItem
+      v-for="(ing) in Object.keys(ingredientList)"
+      :name="ing"
+      :quant="ingredientList[ing][0]"
+      :unit="ingredientList[ing][1]"
+      :key="ing"
+      ></IngredientItem>
   </div>
 </template>
 
 <script>
+import IngredientItem from '@/components/IngredientItem'
 export default {
   name: "GroceryList",
+  components: {IngredientItem},
   data: function() {
     return {
       list: [],
@@ -85,6 +86,11 @@ export default {
   },
   methods: {
     getIngredientList: function() {
+      // TODO needs its own multi-ingredient/multi-recipe API endpoint
+      //      should be able to just send batch of recipe IDs, get ingredient
+      //      list back with base quants and units
+      // TODO move axios calls to api, move state calls to state
+      // TODO create mutations+actions in state.js for fetching + storing
       this.waitList = true;
       this.rawIngredients = [];
       this.list.forEach( async (recipe) => {
@@ -101,6 +107,13 @@ export default {
           }
         }).catch( (err) => { console.log(err)});
       });
+      // remove any checklist items that aren't in raw shopping list
+      //  : fixes items getting left on "checked" list if all recipes that 
+      //    reference them are deleted while the ingredient is checked.
+      //  : TODO this is a hack and will be fixed for real when I get to a 
+      //    refactor/cleanup of state management in general, coming Soon(tm)
+
+      // turn off loading message
       this.waitList = false;
     },
     changeServing: function(delta, id) {
@@ -112,7 +125,7 @@ export default {
       this.updateList();
     },
     removeRecipe: function(id) {
-      console.log(id);
+      this.$state.removeShoppingItems(id);
       this.$state.removeRecipeGrocery(id);
       this.refreshList();
     },

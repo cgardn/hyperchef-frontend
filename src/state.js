@@ -1,5 +1,11 @@
+const blankStates = {
+  'groceryList': [],
+  'rawShoppingList': {},
+  'shoppingList': []
+}
 
 const state = {
+ 
   getGroceryList: function() {
     return JSON.parse(localStorage.getItem('groceryList'));
   },
@@ -17,10 +23,7 @@ const state = {
   },
   removeRecipeGrocery: function(id) {
     const curList = JSON.parse(localStorage.getItem('groceryList'));
-    let newList = [];
-    curList.forEach( (r) => {
-      if (r.recipeId !== id) {newList.push(r)}
-    });
+    const newList = curList.filter( r => r.recipeId !== id);
     localStorage.setItem('groceryList', JSON.stringify(newList));
   },
   toggleGroceryRecipe: function(recipe, servings) {
@@ -39,14 +42,15 @@ const state = {
   clearRawShoppingList: function() {
     localStorage.setItem('rawShoppingList', JSON.stringify({}))
   },
+  removeShoppingItems: function(id) {
+    const curList = this.getRawShoppingList().filter( i => i[1] !== id);
+    this.setRawShoppingList(curList);
+  },
+
   groceryHasRecipe: function(id) {
     // checks if grocery list contains a specified recipe by id
     const list = JSON.parse(localStorage.getItem('groceryList'))
-    let any = false;
-    list.forEach( (r) => {
-      if (r.recipeId === id) {any = true}
-    })
-    return any;
+    return list.some(r => r.recipeId === id);
   },
   clearGrocery: function() {
     localStorage.setItem('groceryList', JSON.stringify([]));
@@ -56,6 +60,31 @@ const state = {
       this.clearGrocery();
     }
   },
+  /* Shopping list persistance */
+  addCheckedIngredient: function(name) {
+    const curList = JSON.parse(localStorage.getItem('shoppingList')) || [];
+    localStorage.setItem('shoppingList', JSON.stringify([...curList, name]));
+  },
+  removeCheckedIngredient: function(name) {
+    const curList = JSON.parse(localStorage.getItem('shoppingList')) || [];
+    const newList = curList.filter( (i) => i !== name);
+    localStorage.setItem('shoppingList', JSON.stringify(newList));
+  },
+
+  /* Utility */
+  getList: function(listName) {
+    if (!localStorage.getItem(listName)) {this.clearList(listName)}
+    return JSON.parse(localStorage.getItem(listName)) || blankStates[listName];
+  },
+  clearList: function(listName) {
+    localStorage.setItem(listName, JSON.stringify(blankStates[listName]));
+  },
+  recoverList: function(listname) {
+    // re-add list only if it's missing
+    if (!localStorage.getItem(listname)) {
+      this.clearList(listname);
+    }
+  }
 }
 
 
