@@ -16,6 +16,7 @@ const state = {
     const curList = JSON.parse(localStorage.getItem('groceryList'));
     const newList = [...curList, {
       name: recipe.name,
+      slug: recipe.slug,
       recipeId: recipe.id,
       servings: servings,
     }];

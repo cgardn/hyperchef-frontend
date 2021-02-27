@@ -9,25 +9,21 @@
         - the presence of a recipe on the list means its ingredients get pulled from the server for manipulation?
         ! might finally need Vuex for this
     -->
-    <div class="row mb-2" v-for="(recipe, idx) in list" :key="idx">
-      <div class="col-3 my-auto">
-        <a class="btn btn-light w-100 mr-5" :href="'/#/recipe/' + recipe.name">{{recipe.name}}</a>
+    <div class="row border-bottom border-dark darkBg py-2" v-for="(recipe, idx) in list" :key="idx">
+      <div class="col-12 col-md-3 mb-2 text-center text-md-left">
+        <a class="btn btn-light" :href="'/#/recipe/' + recipe.slug">{{recipe.name}}</a>
       </div>
       <div class="col my-auto">
-        <span class="mr-2">Servings:</span>
+        <span class="mr-2 textContrastFix">Servings:</span>
         <button class="btn btn-light mr-1" @click="changeServing(-1, recipe.recipeId)">-</button>
-        <span>{{recipe.servings}}</span>
+        <span class="textContrastFix">{{recipe.servings}}</span>
         <button class="btn btn-light ml-1" @click="changeServing(1, recipe.recipeId)">+</button>
       </div>
-      <div class="col-2 my-auto">
+      <div class="col-4 my-auto text-center">
         <button class="btn btn-light" @click="removeRecipe(recipe.recipeId)">X</button>
       </div>
     </div>
-    <div class="row"><div class="col"><hr /></div></div>
-    <div class="row mb-3">
-      <div class="col my-auto">
-        <h6>Shopping list</h6>
-      </div>
+    <div class="row my-3">
       <div class="col my-auto text-left">
         <button
           class="btn btn-light"
@@ -37,6 +33,13 @@
           {{waitList ? "Generating..." : "Refresh List"}}
         </button>
       </div>
+      <div class="col my-auto text-right">
+        <button
+          class="btn btn-light"
+          @click="toggleUnits"
+          :disabled="waitList"
+          >Switch Units</button>
+      </div>
     </div>
     <IngredientItem
       v-for="(ing) in Object.keys(ingredientList)"
@@ -44,6 +47,7 @@
       :quant="ingredientList[ing][0]"
       :unit="ingredientList[ing][1]"
       :key="ing"
+      :isMetric="isMetric"
       ></IngredientItem>
   </div>
 </template>
@@ -58,6 +62,7 @@ export default {
       list: [],
       rawIngredients: [],
       waitList: false,
+      isMetric: true,
     }
   },
   computed: {
@@ -85,6 +90,9 @@ export default {
     },
   },
   methods: {
+    toggleUnits: function() {
+      this.isMetric = !this.isMetric;
+    },
     getIngredientList: async function() {
       // TODO needs its own multi-ingredient/multi-recipe API endpoint
       //      should be able to just send batch of recipe IDs, get ingredient
@@ -136,3 +144,13 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.textContrastFix {
+  color: #222;
+  font-weight: 500;
+}
+.darkBg {
+  background-color: #999;
+}
+</style>
