@@ -40,7 +40,7 @@ export default {
         let oz = (converted % 16)
         let lbs = (converted - (oz))/16;
         return `${lbs > 0 ? `${lbs} lbs` : ''} ${oz > 0 ? `${oz.toFixed(0)} oz` : ''}`;
-      } else if (!this.isMetric && this.unit === 'ml') {
+      } else if (!this.isMetric && this.unit === 'mL') {
         let floz = (converted % 128);
         let gal = (converted - floz)/128;
         return `${gal > 0 ? `${gal} gal` : ''} ${floz > 0 ? `${floz.toFixed(0)} fl. oz` : ''}`;
