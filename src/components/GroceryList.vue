@@ -85,7 +85,7 @@ export default {
     },
   },
   methods: {
-    getIngredientList: function() {
+    getIngredientList: async function() {
       // TODO needs its own multi-ingredient/multi-recipe API endpoint
       //      should be able to just send batch of recipe IDs, get ingredient
       //      list back with base quants and units
@@ -93,25 +93,17 @@ export default {
       // TODO create mutations+actions in state.js for fetching + storing
       this.waitList = true;
       this.rawIngredients = [];
-      this.list.forEach( async (recipe) => {
+      this.$state.clearCheckedIngredients();
+
+      await this.list.forEach( (recipe) => {
         const slug = JSON.parse(localStorage.getItem('recipeGraph')).all_recipes[recipe.recipeId].slug;
-        await this.$axios({
-          method: 'GET',
-          url: `${this.$backend}/api/${this.$apiVersion}/recipes/${slug}`,
-        }).then( res => {
-          if (res.status == 200) {
-            res.data.ingredients.forEach( (ing) => {
-              this.rawIngredients.push([ ing, res.data.recipe.id ]);
-            });
-            this.$state.setRawShoppingList(this.rawIngredients);
-          }
-        }).catch( (err) => { console.log(err)});
+        this.$api.fetchRecipeIngredients(slug).then( (res) => {
+          res.forEach( (i) => {
+            this.rawIngredients.push(i);
+          });
+          this.$state.setRawShoppingList(this.rawIngredients);
+        })
       });
-      // remove any checklist items that aren't in raw shopping list
-      //  : fixes items getting left on "checked" list if all recipes that 
-      //    reference them are deleted while the ingredient is checked.
-      //  : TODO this is a hack and will be fixed for real when I get to a 
-      //    refactor/cleanup of state management in general, coming Soon(tm)
 
       // turn off loading message
       this.waitList = false;

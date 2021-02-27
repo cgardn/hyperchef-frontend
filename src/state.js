@@ -70,6 +70,9 @@ const state = {
     const newList = curList.filter( (i) => i !== name);
     localStorage.setItem('shoppingList', JSON.stringify(newList));
   },
+  clearCheckedIngredients: function() {
+    this.clearList('shoppingList');
+  },
 
   /* Utility */
   getList: function(listName) {
