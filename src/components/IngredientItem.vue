@@ -23,10 +23,6 @@ export default {
   data: function() {
     return {
       checkState: false,
-      standardUnit: {
-        'g': 'oz',
-        'mL': 'fl. oz'
-      },
       unitFactor: {
         'g': .035,
         'mL': .034,
