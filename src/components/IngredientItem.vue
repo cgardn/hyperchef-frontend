@@ -84,7 +84,7 @@ export default {
 }
 .strike {
   background-color: grey;
-  opacity: 50%;
+  opacity: 0.5;
   text-decoration: line-through;
 }
 </style>
