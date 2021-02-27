@@ -71,7 +71,7 @@ export default {
       formData.append('user', this.username);
       formData.append('password', this.password);
       await this.$axios.post(
-        `${this.$backend}/api/${this.$apiVersion}/auth`,
+        `${this.$backend}/api/${this.$apiVersion}/auth/admin`,
         formData,
         {
           headers: {
@@ -96,7 +96,7 @@ export default {
     // otherwise, check for validity of token
     //  invalid or expired tokens will return errors
     await this.$axios.get(
-      `${this.$backend}/api/${this.$apiVersion}/auth/check`,
+      `${this.$backend}/api/${this.$apiVersion}/auth/check_admin`,
       {
         headers: {
           authorization: sessionStorage.getItem('token'),

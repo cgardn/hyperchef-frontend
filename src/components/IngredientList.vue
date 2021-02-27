@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="card bg-grey px-2 py-2">
       <h4>Ingredients</h4>
       <div 
@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  name: "IngredientList.vue",
+  name: "IngredientList",
   props: ["ingredients"],
   data: function() {
     return {
@@ -66,10 +66,10 @@ export default {
   methods: {
     toggleUnits: function() {
       this.isMetric = !this.isMetric;
-
     },
     changeServings: function(amt) {
       this.servingSize += amt;
+      this.$emit("changeServings", this.servingSize);
     },
   },
 }

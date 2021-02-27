@@ -15,8 +15,6 @@
       </div>
     </div>
 
-
-
     <!-- recipe list -->
     <div class="row">
       <div 
@@ -29,6 +27,7 @@
       <PaginatedResults
         v-else
         :isFiltersVisible="isFilterPanelVisible"
+        :isGroceryListVisible="isGroceryListVisible"
         :recipeBatch="visibleRecipes"
         :recipeCount="Object.keys(all_recipes).length"
       >
@@ -61,6 +60,25 @@
             </button>
           </div>
         </template>
+
+        <template v-slot:groceryListButton>
+          <div v-if="!isFilterPanelVisible" class="col-4">
+            <button
+              class="btn btn-height"
+              :class="{
+                'btn-info': isGroceryListVisible, 
+                'btn-light': !isGroceryListVisible,
+              }"
+              @click="toggleGroceryList()"
+            >
+            <img src="../assets/baseline_receipt_long_black_18dp.png">
+            </button>
+          </div>
+        </template>
+        <template v-slot:groceryList>
+          <GroceryList></GroceryList>
+        </template>
+
         <template v-slot:filterPanel>
           <FilterPanel
             :filterList="all_filters"
@@ -78,12 +96,14 @@
 <script>
 import PaginatedResults from '@/components/PaginatedResults'
 import FilterPanel from '@/components/FilterPanel'
+import GroceryList from '@/components/GroceryList'
 
 export default {
   name: "Home",
   components: {
     PaginatedResults,
     FilterPanel,
+    GroceryList,
   },
   data: function() {
     return {
@@ -94,6 +114,7 @@ export default {
       visibleRecipes: [],
       query: "",
       isFilterPanelVisible: false,
+      isGroceryListVisible: false,
       loadingRecipesSpinner: false,
     }
   },
@@ -139,6 +160,11 @@ export default {
     },
     toggleFilterPanel: function() {
       this.isFilterPanelVisible = !this.isFilterPanelVisible;
+      this.isGroceryListVisible = false;
+    },
+    toggleGroceryList: function() {
+      this.isGroceryListVisible = !this.isGroceryListVisible;
+      this.isFilterPanelVisible = false;
     },
     getRecipes: async function() {
       this.loadingRecipesSpinner = true;
