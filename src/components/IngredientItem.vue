@@ -25,11 +25,11 @@ export default {
       checkState: false,
       standardUnit: {
         'g': 'oz',
-        'ml': 'fl. oz'
+        'mL': 'fl. oz'
       },
       unitFactor: {
         'g': .035,
-        'ml': .034,
+        'mL': .034,
       },
     }
   },
