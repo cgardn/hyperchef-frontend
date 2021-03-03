@@ -84,7 +84,7 @@
             :filterList="all_filters"
             :visibleCount="visibleRecipes.length"
             :allCount="Object.keys(all_recipes).length"
-            @toggleBtn="toggleFilter"
+            @toggleBtn="rotateFilter"
             @clearBtn="clearSelectedFilters"
             ></FilterPanel>
         </template>
@@ -111,6 +111,7 @@ export default {
       all_recipes: {},
       sorted_recipe_ids: {},
       selectedFilters: [],
+      excludedFilters: [],
       visibleRecipes: [],
       query: "",
       isFilterPanelVisible: false,
@@ -125,25 +126,41 @@ export default {
   },
   methods: {
     getSelectedFilters: function() {
-      this.selectedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === true);
+      //this.selectedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === true);
+      this.selectedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === 'in');
+      this.excludedFilters = Object.keys(this.all_filters).filter(tag => this.all_filters[tag].state === 'out');
     },
     clearSelectedFilters: function() {
       this.selectedFilters.forEach(tag => {
         this.all_filters[tag].state = false;
+        //this.all_filters[tag].state = 'out';
       });
       this.selectedFilters = [];
       this.parseData();
     },
     getVisibleRecipes: function() {
       // start with all recipe ids
-      let out = Object.keys(this.all_recipes).map(i => Number(i));
-
-      // for each selected filter, perform a series of intersections to get
-      //   to the final set of selected recipes
+      let master = Object.keys(this.all_recipes).map(i => Number(i));
+      // separate accumulation array (for stacking unions)
+      this.visibleRecipes = [];
+      // for each selected 'in' filter, intersect that tag's recipes with 
+      //   master recipe list and union the result with the accumulation array
       this.selectedFilters.forEach(tag => {
-        out = this.intersectArrays(out, this.sorted_recipe_ids[tag])
-      })
-      this.visibleRecipes = out.map(id => this.all_recipes[id])
+        this.visibleRecipes = this.unionArrays(this.visibleRecipes, this.intersectArrays(master, this.sorted_recipe_ids[tag]));
+      });
+
+      // after all inclusions, remove any recipes that contain something from
+      //   the exclusion list. If there's no inclusions, use the master list
+      this.excludedFilters.forEach(tag => {
+        if (this.selectedFilters.length <= 0) {
+          this.visibleRecipes = this.diffArrays(master, this.sorted_recipe_ids[tag]);
+        } else {
+          this.visibleRecipes = this.diffArrays(this.visibleRecipes, this.sorted_recipe_ids[tag]);
+        }
+      });
+
+      // when all sorting done, map numerical ids to actual recipe data
+      this.visibleRecipes = this.visibleRecipes.map(id => this.all_recipes[id]);
     },
     unionArrays: function(arr1, arr2) {
       // returns the union of the two arrays
@@ -153,8 +170,25 @@ export default {
       // intersection of two arrays
       return arr1.filter(x => arr2.includes(x))
     },
+    diffArrays: function(arr1, arr2) {
+      // difference of two arrays
+      // arr1 must be the array with the stuff you want to keep
+      // arr2 is the list of things you don't want in arr1
+      // difference should be the last operation, because
+      //   exclusion always overrides inclusion (you can't include something 
+      //   if it's already gone, you won't know to include it)
+      return arr1.filter(x => !arr2.includes(x));
+    },
     toggleFilter: function(fName) {
       this.all_filters[fName].state = !this.all_filters[fName].state;
+      this.getSelectedFilters();
+      this.getVisibleRecipes();
+    },
+    rotateFilter: function(fName) {
+      let curState = this.all_filters[fName].state;
+      let rotation = {'off': 'in', 'in': 'out', 'out': 'off'}
+      this.all_filters[fName].state = rotation[curState]
+
       this.getSelectedFilters();
       this.getVisibleRecipes();
     },
@@ -183,6 +217,9 @@ export default {
       let data = JSON.parse(localStorage.getItem("recipeGraph"));
       this.all_recipes = data.all_recipes;
       this.all_filters = data.all_filters;
+      Object.keys(this.all_filters).forEach( tag => {
+        this.all_filters[tag].state = 'off';
+      });
       this.sorted_recipe_ids = data.sorted_recipe_ids;
       this.visibleRecipes = Object.keys(this.all_recipes).map(id => this.all_recipes[id]);
     },

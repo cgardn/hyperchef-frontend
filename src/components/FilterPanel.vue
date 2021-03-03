@@ -11,6 +11,7 @@
             v-for="(filter, idy) in itags[itag]"
             :key="idy"
             :active="tags[filter].state"
+            :state="tags[filter].state"
             @click="emitToggle(filter)"
             >{{filter}}</ToggleButton>
         </IngredientTagDropdown>
